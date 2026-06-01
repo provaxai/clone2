@@ -145,8 +145,8 @@ export default function Dashboard({
   const TRACK      = isDark ? '#1F2D45' : '#E5EAF2';
   const DIAG_TRACK = isDark ? '#1F2D45' : '#F1ECE1';
   const ITEM_BG    = isDark ? '#1A2540' : '#FAF7F0';
-  const BLUE_SOFT_D  = isDark ? '#0D1F3C' : BLUE_SOFT;
-  const BLUE_BOR_D   = isDark ? '#1F2D45' : BLUE_BORDER;
+  const BLUE_SOFT_D  = isDark ? '#0e1428' : BLUE_SOFT;
+  const BLUE_BOR_D   = isDark ? '#1e2342' : BLUE_BORDER;
 
   const wrapperStyle: React.CSSProperties = {
     background: BG,
