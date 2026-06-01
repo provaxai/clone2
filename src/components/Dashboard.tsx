@@ -15,8 +15,8 @@ interface DashboardProps {
 }
 
 // Palette — PRF Blue
-const BLUE = '#1B4FD8';
-const BLUE_DARK = '#1339A8';
+const BLUE = '#6366f1';
+const BLUE_DARK = '#4338ca';
 const BLUE_SOFT = '#EEF3FF';
 const BLUE_BORDER = '#BFDBFE';
 const BLUE_ICON_BG = '#DBEAFE';
@@ -138,15 +138,15 @@ export default function Dashboard({
       : `Bom desempenho geral. Mantenha a constância em ${worst.name} para garantir aprovação no próximo simulado.`;
 
   const BG         = isDark ? '#0B1120' : '#F5F3EE';
-  const SURFACE    = isDark ? '#111827' : '#ffffff';
+  const SURFACE    = isDark ? '#0a0d1a' : '#ffffff';
   const BORDER     = isDark ? '#1F2D45' : '#E8E0D0';
   const TXT        = isDark ? '#F1F5F9' : TEXT;
   const MTXT       = isDark ? '#64748B' : MUTED;
   const TRACK      = isDark ? '#1F2D45' : '#E5EAF2';
   const DIAG_TRACK = isDark ? '#1F2D45' : '#F1ECE1';
   const ITEM_BG    = isDark ? '#1A2540' : '#FAF7F0';
-  const BLUE_SOFT_D  = isDark ? '#0D1F3C' : BLUE_SOFT;
-  const BLUE_BOR_D   = isDark ? '#1F2D45' : BLUE_BORDER;
+  const BLUE_SOFT_D  = isDark ? '#0e1428' : BLUE_SOFT;
+  const BLUE_BOR_D   = isDark ? '#1e2342' : BLUE_BORDER;
 
   const wrapperStyle: React.CSSProperties = {
     background: BG,
@@ -203,7 +203,7 @@ export default function Dashboard({
           const palette = {
             high: { bg: isDark ? '#2A1010' : '#FDECEC', border: isDark ? '#4A1515' : '#F5B7B1', accent: RED, iconBg: isDark ? '#3A1515' : '#FADBD8' },
             mid: { bg: isDark ? '#2A1E0A' : '#FFF6E5', border: isDark ? '#4A3010' : '#F5D8A0', accent: ORANGE, iconBg: isDark ? '#3A2810' : '#FCE9C7' },
-            low: { bg: BLUE_SOFT_D, border: BLUE_BOR_D, accent: BLUE, iconBg: isDark ? '#0D1F3C' : BLUE_ICON_BG },
+            low: { bg: BLUE_SOFT_D, border: BLUE_BOR_D, accent: BLUE, iconBg: isDark ? '#0e1428' : BLUE_ICON_BG },
           }[urgency];
 
           return (
@@ -306,8 +306,8 @@ export default function Dashboard({
           style={{
             ...card,
             background: approvalProb >= CUT_SCORE
-              ? isDark ? 'linear-gradient(135deg, #0D2B1E 0%, #111827 100%)' : 'linear-gradient(135deg, #E7F6EE 0%, #fff 100%)'
-              : isDark ? `linear-gradient(135deg, ${BLUE_SOFT_D} 0%, #111827 100%)` : `linear-gradient(135deg, ${BLUE_SOFT} 0%, #fff 100%)`,
+              ? isDark ? 'linear-gradient(135deg, #0D2B1E 0%, #0a0d1a 100%)' : 'linear-gradient(135deg, #E7F6EE 0%, #fff 100%)'
+              : isDark ? `linear-gradient(135deg, ${BLUE_SOFT_D} 0%, #0a0d1a 100%)` : `linear-gradient(135deg, ${BLUE_SOFT} 0%, #fff 100%)`,
             border: `1px solid ${approvalProb >= CUT_SCORE ? (isDark ? '#1A4731' : '#A7F3D0') : BLUE_BOR_D}`,
           }}
         >
