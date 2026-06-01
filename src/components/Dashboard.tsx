@@ -306,8 +306,8 @@ export default function Dashboard({
           style={{
             ...card,
             background: approvalProb >= CUT_SCORE
-              ? isDark ? 'linear-gradient(135deg, #0D2B1E 0%, #111827 100%)' : 'linear-gradient(135deg, #E7F6EE 0%, #fff 100%)'
-              : isDark ? `linear-gradient(135deg, ${BLUE_SOFT_D} 0%, #111827 100%)` : `linear-gradient(135deg, ${BLUE_SOFT} 0%, #fff 100%)`,
+              ? isDark ? 'linear-gradient(135deg, #0D2B1E 0%, #0a0d1a 100%)' : 'linear-gradient(135deg, #E7F6EE 0%, #fff 100%)'
+              : isDark ? `linear-gradient(135deg, ${BLUE_SOFT_D} 0%, #0a0d1a 100%)` : `linear-gradient(135deg, ${BLUE_SOFT} 0%, #fff 100%)`,
             border: `1px solid ${approvalProb >= CUT_SCORE ? (isDark ? '#1A4731' : '#A7F3D0') : BLUE_BOR_D}`,
           }}
         >
