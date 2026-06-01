@@ -375,9 +375,9 @@ body {
 
 /* Dark Mode Official PRF style overrides */
 .prf-theme:not(.light-theme) {
-  --background-navy: #0b0d1c; /* Refined midnight indigo - deeper, more elegant than navy */
-  --panel-navy: #11142b;      /* Rich indigo panel - sophisticated low-saturation depth */
-  --card-navy: #181c3a;       /* Premium midnight indigo card - luxurious tone */
+  --background-navy: #06080f; /* Quase-preto com leve tom indigo - profundo e sóbrio */
+  --panel-navy: #0a0d1a;      /* Painel midnight neutro - menos saturação */
+  --card-navy: #11152a;       /* Card midnight refinado - profundidade sem azul gritante */
   --gold-primary: #fbbf24;    /* Softer, lighter gold/amber-400 instead of harsh #eab308 */
   --gold-accent: #fcd34d;     /* Calm, elegant pale gold/amber-300 instead of bright neon #facc15 */
   
@@ -385,20 +385,20 @@ body {
 }
 
 .prf-theme:not(.light-theme) .bg-slate-950 {
-  background-color: #08091a !important; /* Deepest midnight indigo backdrop */
+  background-color: #04060d !important; /* Backdrop mais profundo */
 }
 
 .prf-theme:not(.light-theme) .bg-slate-900,
 .prf-theme:not(.light-theme) header#control-panel-header,
 .prf-theme:not(.light-theme) aside#applet-sidebar {
-  background-color: #0e1124 !important; /* Elegant midnight indigo for chrome */
+  background-color: #080a16 !important; /* Chrome lateral/topo bem escuro */
   backdrop-filter: blur(12px);
 }
 
 .prf-theme:not(.light-theme) .bg-slate-850,
 .prf-theme:not(.light-theme) .bg-slate-800,
 .prf-theme:not(.light-theme) .bg-slate-850\/60 {
-  background-color: #181c3a !important; /* Premium midnight indigo cards */
+  background-color: #11152a !important; /* Cards midnight neutros */
 }
 
 /* Borders in Dark PRF mode */
@@ -409,7 +409,7 @@ body {
 .prf-theme:not(.light-theme) .border-emerald-950\/40,
 .prf-theme:not(.light-theme) header#control-panel-header,
 .prf-theme:not(.light-theme) aside#applet-sidebar {
-  border-color: #262b4f !important; /* Subtle indigo border with refined glow */
+  border-color: #1e2342 !important; /* Borda indigo sutil */
 }
 
 /* Map circular gauges & charts in dark mode to gorgeous gold & dark sapphire track */
