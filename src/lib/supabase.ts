@@ -3,7 +3,14 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = 'https://fkwivsebcbuxvobcpina.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_L21PHPkk4tSo6mExSJggVw_55zUeDtO';
 
+const SITE_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+  ? 'https://provaxai.com.br'
+  : `http://localhost:${window.location.port || 8084}`;
+
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// URL de redirecionamento após confirmação de email
+export const REDIRECT_URL = SITE_URL;
 
 export type AuthUser = {
   id: string;

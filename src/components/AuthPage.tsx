@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { auth } from '../lib/supabase';
+import { auth, supabase, REDIRECT_URL } from '../lib/supabase';
 import Logo from './Logo';
 import { Loader2, Eye, EyeOff, AlertCircle, CheckCircle2 } from 'lucide-react';
 
@@ -45,7 +45,13 @@ export default function AuthPage({ onAuth, theme = 'dark' }: AuthPageProps) {
       } else if (mode === 'register') {
         if (!name.trim()) { setError('Digite seu nome.'); setLoading(false); return; }
         if (password.length < 6) { setError('Senha deve ter pelo menos 6 caracteres.'); setLoading(false); return; }
-        const { error } = await auth.signUp(email, password, name);
+        const { error } = await supabase.auth.signUp({
+          email, password,
+          options: {
+            data: { name },
+            emailRedirectTo: REDIRECT_URL,
+          },
+        });
         if (error) throw error;
         setSuccess('Conta criada! Verifique seu e-mail para confirmar o cadastro.');
 
