@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiGenerateScheduleRouteImport } from './routes/api/generate-schedule'
 import { Route as ApiGenerateQuestionRouteImport } from './routes/api/generate-question'
+import { Route as ApiFetchDriveFolderRouteImport } from './routes/api/fetch-drive-folder'
+import { Route as ApiFetchDriveRouteImport } from './routes/api/fetch-drive'
 import { Route as ApiChatAthenaRouteImport } from './routes/api/chat-athena'
 import { Route as ApiAnalyzeLibraryRouteImport } from './routes/api/analyze-library'
 
@@ -30,6 +32,16 @@ const ApiGenerateQuestionRoute = ApiGenerateQuestionRouteImport.update({
   path: '/api/generate-question',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiFetchDriveFolderRoute = ApiFetchDriveFolderRouteImport.update({
+  id: '/api/fetch-drive-folder',
+  path: '/api/fetch-drive-folder',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiFetchDriveRoute = ApiFetchDriveRouteImport.update({
+  id: '/api/fetch-drive',
+  path: '/api/fetch-drive',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiChatAthenaRoute = ApiChatAthenaRouteImport.update({
   id: '/api/chat-athena',
   path: '/api/chat-athena',
@@ -45,6 +57,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/analyze-library': typeof ApiAnalyzeLibraryRoute
   '/api/chat-athena': typeof ApiChatAthenaRoute
+  '/api/fetch-drive': typeof ApiFetchDriveRoute
+  '/api/fetch-drive-folder': typeof ApiFetchDriveFolderRoute
   '/api/generate-question': typeof ApiGenerateQuestionRoute
   '/api/generate-schedule': typeof ApiGenerateScheduleRoute
 }
@@ -52,6 +66,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/analyze-library': typeof ApiAnalyzeLibraryRoute
   '/api/chat-athena': typeof ApiChatAthenaRoute
+  '/api/fetch-drive': typeof ApiFetchDriveRoute
+  '/api/fetch-drive-folder': typeof ApiFetchDriveFolderRoute
   '/api/generate-question': typeof ApiGenerateQuestionRoute
   '/api/generate-schedule': typeof ApiGenerateScheduleRoute
 }
@@ -60,6 +76,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/api/analyze-library': typeof ApiAnalyzeLibraryRoute
   '/api/chat-athena': typeof ApiChatAthenaRoute
+  '/api/fetch-drive': typeof ApiFetchDriveRoute
+  '/api/fetch-drive-folder': typeof ApiFetchDriveFolderRoute
   '/api/generate-question': typeof ApiGenerateQuestionRoute
   '/api/generate-schedule': typeof ApiGenerateScheduleRoute
 }
@@ -69,6 +87,8 @@ export interface FileRouteTypes {
     | '/'
     | '/api/analyze-library'
     | '/api/chat-athena'
+    | '/api/fetch-drive'
+    | '/api/fetch-drive-folder'
     | '/api/generate-question'
     | '/api/generate-schedule'
   fileRoutesByTo: FileRoutesByTo
@@ -76,6 +96,8 @@ export interface FileRouteTypes {
     | '/'
     | '/api/analyze-library'
     | '/api/chat-athena'
+    | '/api/fetch-drive'
+    | '/api/fetch-drive-folder'
     | '/api/generate-question'
     | '/api/generate-schedule'
   id:
@@ -83,6 +105,8 @@ export interface FileRouteTypes {
     | '/'
     | '/api/analyze-library'
     | '/api/chat-athena'
+    | '/api/fetch-drive'
+    | '/api/fetch-drive-folder'
     | '/api/generate-question'
     | '/api/generate-schedule'
   fileRoutesById: FileRoutesById
@@ -91,6 +115,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiAnalyzeLibraryRoute: typeof ApiAnalyzeLibraryRoute
   ApiChatAthenaRoute: typeof ApiChatAthenaRoute
+  ApiFetchDriveRoute: typeof ApiFetchDriveRoute
+  ApiFetchDriveFolderRoute: typeof ApiFetchDriveFolderRoute
   ApiGenerateQuestionRoute: typeof ApiGenerateQuestionRoute
   ApiGenerateScheduleRoute: typeof ApiGenerateScheduleRoute
 }
@@ -118,6 +144,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiGenerateQuestionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/fetch-drive-folder': {
+      id: '/api/fetch-drive-folder'
+      path: '/api/fetch-drive-folder'
+      fullPath: '/api/fetch-drive-folder'
+      preLoaderRoute: typeof ApiFetchDriveFolderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/fetch-drive': {
+      id: '/api/fetch-drive'
+      path: '/api/fetch-drive'
+      fullPath: '/api/fetch-drive'
+      preLoaderRoute: typeof ApiFetchDriveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/chat-athena': {
       id: '/api/chat-athena'
       path: '/api/chat-athena'
@@ -139,6 +179,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiAnalyzeLibraryRoute: ApiAnalyzeLibraryRoute,
   ApiChatAthenaRoute: ApiChatAthenaRoute,
+  ApiFetchDriveRoute: ApiFetchDriveRoute,
+  ApiFetchDriveFolderRoute: ApiFetchDriveFolderRoute,
   ApiGenerateQuestionRoute: ApiGenerateQuestionRoute,
   ApiGenerateScheduleRoute: ApiGenerateScheduleRoute,
 }

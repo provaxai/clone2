@@ -27,6 +27,7 @@ export const INITIAL_PROGRESS: ProgressData = {
     'Direitos Humanos': { total: 0, correct: 0, efficiency: 0, status: 'critical' },
   },
   studyStreakHistory: ['2026-05-15', '2026-05-16', '2026-05-17', '2026-05-18', '2026-05-19'],
+  approvalHistory: [],
 };
 
 export const PRF_QUESTIONS: Question[] = [
@@ -249,30 +250,30 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
   },
   {
     id: 'essencial',
-    name: 'Essencial',
+    name: 'Essencial PRF',
     price: 49.90,
-    isTrial: false,
+    isTrial: true,
     features: [
       'Resolução ilimitada de questões da PRF',
-      'Onboarding completo e cronograma personalizado',
+      'Cronograma adaptativo personalizado',
       'Flashcards em todos os modos e Lei Seca',
-      'Suporte para até 50 mensagens diárias com a Athena',
+      'Até 50 mensagens diárias com a Athena',
       'Histórico de progresso e estatísticas básicas'
     ]
   },
   {
     id: 'premium',
-    name: 'A Athena Gold',
+    name: 'Athena Supreme',
     price: 97.00,
     isTrial: true,
     features: [
-      'Mentora estratégica Athena 100% ILIMITADA',
-      'Simulados ilimitados e gerados sob demanda por IA',
-      'Análise preditiva CEBRASPE e probabilidade de aprovação real',
-      'Biblioteca inteligente de PDFs e YouTube (leitura por IA)',
-      'Geração personalizada de questões e flashcards da sua biblioteca',
+      'Mentora Athena 100% ILIMITADA — 24h/dia',
+      'Simulados ilimitados gerados por IA sob demanda',
+      'Diagnóstico preditivo CEBRASPE e probabilidade de aprovação',
+      'Biblioteca inteligente de PDFs (leitura por IA)',
+      'Geração personalizada de questões e flashcards',
       'Acesso antecipado a atualizações legislativas urgentes',
-      '7 dias GRÁTIS sem cobrança imediata'
+      '7 dias GRÁTIS — sem cobrança imediata'
     ]
   }
 ];

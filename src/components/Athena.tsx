@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Message, UserOnboarding, ProgressData } from '../types';
-import { Send, Sparkles, Shield, RefreshCw, MessageSquare, Flame, Award, Loader2 } from 'lucide-react';
+import { Send, RefreshCw, Loader2, Sparkles } from 'lucide-react';
 
 interface AthenaProps {
   onboarding: UserOnboarding | null;
@@ -8,113 +8,134 @@ interface AthenaProps {
   messages: Message[];
   onSendMessage: (content: string) => Promise<void>;
   onClearHistory: () => void;
+  theme?: 'dark' | 'light';
 }
 
-export default function Athena({ onboarding, progress, messages, onSendMessage, onClearHistory }: AthenaProps) {
+export default function Athena({ onboarding, progress, messages, onSendMessage, onClearHistory, theme = 'dark' }: AthenaProps) {
   const [inputText, setInputText] = useState('');
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const d = theme === 'dark';
 
-  // Suggested prompt chips matching PRF exam context
   const suggestedPrompts = [
-    'Me explica o Artigo 165-A do CTB e recusa?',
-    'Quais as pegadinhas do Artigo 144 da CF?',
-    'Como caem as reescritas de Português no CEBRASPE?',
-    'Como lidar com as fórmulas de Física da colisão?',
-    'Me passe um bizú rápido para o simulado'
+    'Me explica o Art. 165-A do CTB',
+    'Pegadinhas do Art. 144 da CF',
+    'Como cai Português no CEBRASPE?',
+    'Fórmulas de Física da colisão',
+    'Bizú rápido para o simulado',
+    'Diferença entre dolo eventual e culpa consciente',
   ];
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, loading]);
 
   const handleSend = async (textToSend: string) => {
     if (!textToSend.trim() || loading) return;
     setInputText('');
     setLoading(true);
-    try {
-      await onSendMessage(textToSend);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+    try { await onSendMessage(textToSend); } catch (e) { console.error(e); } finally { setLoading(false); }
   };
 
+  const initials = onboarding?.name?.slice(0, 1).toUpperCase() || 'R';
+
+  // Tokens de tema
+  const bg      = d ? 'bg-[#0d1117]'  : 'bg-white';
+  const border  = d ? 'border-white/[0.06]' : 'border-slate-200';
+  const hdrBg   = d ? 'bg-[#080b14]/80' : 'bg-slate-50/80';
+  const bodyBg  = d ? 'bg-[#080b14]/50' : 'bg-slate-50';
+  const footBg  = d ? 'bg-[#080b14]'  : 'bg-white';
+  const chipsBg = d ? 'bg-[#080b14]/80' : 'bg-slate-50/80';
+  const txt     = d ? 'text-white'     : 'text-slate-900';
+  const mut     = d ? 'text-slate-400' : 'text-slate-500';
+  const fnt     = d ? 'text-slate-500' : 'text-slate-400';
+  const raised  = d ? 'bg-[#131a27]'  : 'bg-slate-100';
+  const inp     = d
+    ? 'bg-[#131a27] border border-white/[0.08] focus:border-indigo-500/60 text-white placeholder-slate-500'
+    : 'bg-slate-100 border border-slate-200 focus:border-indigo-400 text-slate-900 placeholder-slate-400';
+  const chipCls = d
+    ? 'text-slate-400 hover:text-white bg-white/[0.03] hover:bg-white/[0.07] border border-white/[0.06] hover:border-white/[0.12]'
+    : 'text-slate-500 hover:text-slate-900 bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300';
+  const athenaMsgCls = d
+    ? 'bg-[#131a27] border border-white/[0.06] text-slate-200 rounded-tl-sm'
+    : 'bg-slate-100 border border-slate-200 text-slate-700 rounded-tl-sm';
+  const clearBtnCls = d
+    ? 'text-slate-500 hover:text-slate-300 border border-white/[0.06] hover:bg-white/[0.04]'
+    : 'text-slate-400 hover:text-slate-700 border border-slate-200 hover:bg-slate-100';
+  const statCardCls = d
+    ? 'bg-white/[0.03] border border-white/[0.06]'
+    : 'bg-white border border-slate-200 shadow-sm';
+
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl flex flex-col h-[580px]" id="athena-chat-panel">
-      
-      {/* Chat header */}
-      <div className="p-4 border-b border-slate-800 bg-slate-950/80 flex items-center justify-between rounded-t-2xl">
+    <div className={`flex flex-col h-[calc(100vh-140px)] min-h-[500px] max-h-[800px] ${bg} border ${border} rounded-2xl overflow-hidden shadow-2xl shadow-black/20`}>
+
+      {/* Header */}
+      <div className={`flex items-center justify-between px-5 py-4 border-b ${border} ${hdrBg} backdrop-blur-sm shrink-0`}>
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-emerald-950/50 rounded-xl border border-emerald-500/20 text-emerald-400 text-lg relative">
-            🦉
-            <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-slate-950 shadow animate-ping" />
+          <div className="relative">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-lg shadow-lg">
+              🦉
+            </div>
+            <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 rounded-full border-2 border-[#080b14] animate-pulse" />
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
-              <h3 className="font-extrabold text-white text-sm">Athena AI</h3>
-              <span className="text-[9px] font-mono font-bold bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-1.5 py-0.5 rounded uppercase">Mentora de Elite</span>
+            <div className="flex items-center gap-2">
+              <h3 className={`text-sm font-black tracking-tight ${txt}`}>Athena AI</h3>
+              <span className="text-[9px] font-mono font-bold bg-amber-500/10 border border-amber-500/20 text-amber-500 px-1.5 py-0.5 rounded-md uppercase">Elite</span>
             </div>
-            <p className="text-[10px] text-slate-400 font-mono">Status: Patrulhando seu edital</p>
+            <p className={`text-[10px] font-mono mt-0.5 flex items-center gap-1 text-emerald-500`}>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+              Online · PRF/CEBRASPE
+            </p>
           </div>
         </div>
-
-        <button
-          onClick={onClearHistory}
-          className="text-xs text-slate-500 hover:text-slate-300 font-mono flex items-center gap-1 transition-colors border border-slate-850 px-2 py-1 rounded hover:bg-slate-950"
-        >
-          <RefreshCw className="w-3 h-3" />
-          Limpar Histórico
+        <button onClick={onClearHistory} className={`flex items-center gap-1.5 text-[11px] font-mono px-3 py-1.5 rounded-lg transition-all cursor-pointer ${clearBtnCls}`}>
+          <RefreshCw className="w-3 h-3" /> Limpar
         </button>
       </div>
 
-      {/* Chat body containing messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-950/40 select-text" id="chat-messages-scroll" ref={scrollRef}>
-        
+      {/* Mensagens */}
+      <div ref={scrollRef} className={`flex-1 overflow-y-auto px-4 py-5 space-y-5 ${bodyBg} select-text scroll-smooth`}>
         {messages.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4 max-w-sm mx-auto select-none" id="chat-empty-state">
-            <span className="text-4xl">🦉</span>
-            <div className="space-y-1">
-              <h4 className="font-bold text-white text-sm">Central da Mentora Athena</h4>
-              <p className="text-xs text-slate-400 leading-relaxed font-sans">
-                Eu conheço seu edital, seus erros recentes de trânsito e o peso das matérias da CEBRASPE. Faça qualquer pergunta de estudo ou estratégia!
+          <div className="h-full flex flex-col items-center justify-center text-center px-6 space-y-5 select-none">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-600/20 to-teal-700/20 border border-emerald-500/20 flex items-center justify-center text-4xl">🦉</div>
+            <div className="space-y-2 max-w-xs">
+              <h4 className={`text-base font-black ${txt}`}>Sua Mentora Estratégica</h4>
+              <p className={`text-xs leading-relaxed ${mut}`}>
+                Conheço seu edital, seus erros e o peso das matérias da CEBRASPE. Pergunte sobre estratégia, artigos ou dúvidas de prova.
               </p>
+            </div>
+            <div className="grid grid-cols-3 gap-2 w-full max-w-xs">
+              {[
+                { label: 'Acerto', value: `${Math.round(progress?.overallAccuracyRate ?? 0)}%` },
+                { label: 'Questões', value: `${progress?.totalQuestionsAnswered ?? 0}` },
+                { label: 'Streak', value: `${progress?.daysConsecutive ?? 0}d` },
+              ].map(s => (
+                <div key={s.label} className={`${statCardCls} rounded-xl p-2.5 text-center`}>
+                  <div className="text-sm font-black text-indigo-500">{s.value}</div>
+                  <div className={`text-[9px] font-mono mt-0.5 ${fnt}`}>{s.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
-        {messages.map((msg) => {
+        {messages.map(msg => {
           const isAthena = msg.sender === 'athena';
           return (
-            <div 
-              key={msg.id} 
-              className={`flex gap-3 max-w-[85%] ${isAthena ? 'mr-auto' : 'ml-auto flex-row-reverse'}`}
-            >
+            <div key={msg.id} className={`flex gap-3 ${isAthena ? 'mr-auto max-w-[88%]' : 'ml-auto max-w-[80%] flex-row-reverse'}`}>
               {isAthena ? (
-                <span className="text-xl shrink-0 mt-0.5">🦉</span>
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-sm shrink-0 mt-0.5">🦉</div>
               ) : (
-                <span className="p-1 w-7 h-7 rounded-full bg-emerald-700 text-white font-black text-xs flex items-center justify-center shrink-0">
-                  {onboarding?.name?.slice(0, 2).toUpperCase() || 'RE'}
-                </span>
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-[10px] font-black text-white shrink-0 mt-0.5">{initials}</div>
               )}
-
               <div className="space-y-1">
-                <div className={`p-3.5 rounded-2xl text-xs sm:text-sm font-sans leading-relaxed ${
-                  isAthena 
-                    ? 'bg-slate-950 border border-slate-850 text-slate-200 rounded-tl-none font-medium' 
-                    : 'bg-emerald-600 text-white rounded-tr-none font-bold'
+                <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                  isAthena ? athenaMsgCls : 'bg-gradient-to-br from-indigo-600 to-indigo-700 text-white rounded-tr-sm shadow-lg shadow-indigo-500/20'
                 }`}>
-                  {/* Simplistic formatting: split lines by bullet points */}
-                  {msg.content.split('\n').map((line, lIdx) => (
-                    <p key={lIdx} className="mb-1.5 last:mb-0">
-                      {line}
-                    </p>
-                  ))}
+                  {msg.content.split('\n').map((line, i) => <p key={i} className={i > 0 ? 'mt-1.5' : ''}>{line}</p>)}
                 </div>
-                <span className={`text-[9px] font-mono text-slate-500 block ${isAthena ? 'text-left' : 'text-right'}`}>
+                <span className={`text-[9px] font-mono block ${fnt} ${isAthena ? 'text-left' : 'text-right'}`}>
                   {new Date(msg.timestamp).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                 </span>
               </div>
@@ -124,58 +145,43 @@ export default function Athena({ onboarding, progress, messages, onSendMessage, 
 
         {loading && (
           <div className="flex gap-3 mr-auto max-w-[80%]">
-            <span className="text-xl animate-bounce">🦉</span>
-            <div className="bg-slate-950 border border-slate-850 text-slate-400 p-3.5 rounded-2xl rounded-tl-none text-xs flex items-center gap-2 font-mono">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-emerald-600 to-teal-700 flex items-center justify-center text-sm shrink-0">🦉</div>
+            <div className={`px-4 py-3 ${athenaMsgCls} rounded-2xl flex items-center gap-2`}>
               <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-500" />
-              Athena está consultando o Código de Trânsito...
+              <span className={`text-xs font-mono ${mut}`}>Consultando o CTB...</span>
             </div>
           </div>
         )}
       </div>
 
-      {/* Suggested prompts chips bar */}
-      <div className="p-3 bg-slate-950 border-t border-slate-850 overflow-x-auto whitespace-nowrap flex gap-2 scrollbar-none shrink-0" id="chat-prompt-chips">
-        {suggestedPrompts.map((pText) => (
-          <button
-            key={pText}
-            onClick={() => handleSend(pText)}
-            disabled={loading}
-            className="inline-block py-1 px-3 bg-slate-900 border border-slate-800 hover:border-emerald-600 rounded-lg text-[10px] font-mono font-medium text-slate-300 hover:text-white transition-colors"
-          >
-            {pText}
+      {/* Chips */}
+      <div className={`px-4 py-2.5 border-t ${border} ${chipsBg} flex gap-2 overflow-x-auto scrollbar-none shrink-0`}>
+        {suggestedPrompts.map(p => (
+          <button key={p} onClick={() => handleSend(p)} disabled={loading}
+            className={`flex-none text-[10px] font-mono font-medium px-3 py-1.5 rounded-lg transition-all whitespace-nowrap cursor-pointer disabled:opacity-40 ${chipCls}`}>
+            {p}
           </button>
         ))}
       </div>
 
-      {/* Chat input box */}
-      <div className="p-4 bg-slate-950 border-t border-slate-800 rounded-b-2xl">
-        <form 
-          onSubmit={(e) => { e.preventDefault(); handleSend(inputText); }}
-          className="flex gap-2"
-        >
+      {/* Input */}
+      <div className={`px-4 py-3 ${footBg} border-t ${border} shrink-0`}>
+        <form onSubmit={e => { e.preventDefault(); handleSend(inputText); }} className="flex gap-2">
           <input
-            id="chat-user-input"
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            disabled={loading}
-            placeholder="Pergunte sobre crimes, recursos, CTB ou bizus da banca..."
-            className="flex-1 bg-slate-900 border border-slate-850 rounded-xl py-2.5 px-4 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors"
+            type="text" value={inputText} onChange={e => setInputText(e.target.value)}
+            disabled={loading} placeholder="Pergunte sobre CTB, CF, estratégia CEBRASPE..."
+            className={`flex-1 rounded-xl px-4 py-2.5 text-sm outline-none transition-all ${inp}`}
           />
-          <button
-            type="submit"
-            disabled={!inputText.trim() || loading}
-            className={`p-2.5 rounded-xl flex items-center justify-center transition-all shrink-0 ${
-              inputText.trim() && !loading 
-                ? 'bg-emerald-600 hover:bg-emerald-500 text-white hover:scale-[1.02]' 
-                : 'bg-slate-850 text-slate-600 cursor-not-allowed'
-            }`}
-          >
+          <button type="submit" disabled={!inputText.trim() || loading}
+            className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all shrink-0 ${
+              inputText.trim() && !loading
+                ? 'bg-gradient-to-br from-indigo-600 to-indigo-500 text-white shadow-lg hover:scale-[1.05] cursor-pointer'
+                : d ? 'bg-white/[0.04] text-slate-600 cursor-not-allowed' : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+            }`}>
             <Send className="w-4 h-4" />
           </button>
         </form>
       </div>
-
     </div>
   );
 }

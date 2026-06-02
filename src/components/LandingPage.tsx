@@ -25,12 +25,13 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
   const [isSticky, setIsSticky] = useState(false);
 
   // Playground interactive state
-  const [activePlaygroundTab, setActivePlaygroundTab] = useState<'edital' | 'questoes' | 'revisao' | 'diagnostico'>('edital');
+  const [activePlaygroundTab, setActivePlaygroundTab] = useState<'dashboard' | 'treinar' | 'cronograma' | 'simulados'>('dashboard');
   const [simulationState, setSimulationState] = useState<'idle' | 'running' | 'completed'>('idle');
   const [selectedTopic, setSelectedTopic] = useState('Art. 306 CTB - Embriaguez ao Volante');
   const [simulatedAnswer, setSimulatedAnswer] = useState<boolean | null>(null);
   const [isFlippedPlayground, setIsFlippedPlayground] = useState(false);
-  const [selectedProfilePlayground, setSelectedProfilePlayground] = useState<'trabalhador' | 'dedicado'>('trabalhador');
+  const [selectedProfilePlayground, setSelectedProfilePlayground] = useState<string>('mini');
+  const [missionChecked, setMissionChecked] = useState<boolean[]>([false, false, false]);
 
   // Sticky scroll list & bottom CTA trigger
   useEffect(() => {
@@ -365,13 +366,12 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
         </div>
       </section>
 
-      {/* 5. INTERACTIVE PLAYGROUND "ATHENA IN ACTION" (WOW SECTIONS) */}
+      {/* 5. INTERACTIVE PLAYGROUND — PÁGINAS REAIS DO DASHBOARD */}
       <section className="py-24 bg-[#0a0e1a] border-b border-white/[0.03] relative" id="playground">
-        {/* Decorative elements */}
         <div className="absolute top-1/2 left-10 w-96 h-96 bg-amber-500/5 rounded-full blur-[100px] pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
+
           <div className="text-center space-y-4 mb-16">
             <span className="text-xs font-mono uppercase text-amber-500 tracking-wider font-extrabold px-3 py-1 rounded-full bg-amber-500/10 inline-block">
               DEMONSTRAÇÃO INTERATIVA
@@ -380,377 +380,413 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
               Veja a <span className="text-amber-500">Athena AI</span> trabalhando por você
             </h2>
             <p className="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
-              Explore o painel de simulação interativa e veja como nossa inteligência artificial resolve as principais etapas do seu aprendizado.
+              Navegue pelas páginas reais da plataforma e veja como cada módulo acelera sua aprovação.
             </p>
           </div>
 
-          {/* Tab Selector Interface */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Sidebar Navigation Tabs */}
+
+            {/* Sidebar tabs */}
             <div className="lg:col-span-4 space-y-2">
-              <button
-                onClick={() => setActivePlaygroundTab('edital')}
-                className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
-                  activePlaygroundTab === 'edital' 
-                    ? 'bg-amber-950/20 border-amber-500 text-white' 
-                    : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'edital' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
-                    <Upload className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold">1 Mapeamento de Edital</h4>
-                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Análise de PDF estratégica</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white transition-transform" />
-              </button>
 
               <button
-                onClick={() => setActivePlaygroundTab('questoes')}
+                onClick={() => setActivePlaygroundTab('dashboard')}
                 className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
-                  activePlaygroundTab === 'questoes' 
-                    ? 'bg-amber-950/20 border-amber-500 text-white' 
+                  activePlaygroundTab === 'dashboard'
+                    ? 'bg-amber-950/20 border-amber-500 text-white'
                     : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'questoes' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
-                    <Sparkles className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold">2 Geração de Exercício</h4>
-                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Questões adaptativas CEBRASPE</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white transition-transform" />
-              </button>
-
-              <button
-                onClick={() => setActivePlaygroundTab('revisao')}
-                className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
-                  activePlaygroundTab === 'revisao' 
-                    ? 'bg-amber-950/20 border-amber-500 text-white' 
-                    : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'revisao' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
-                    <RefreshCw className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-sm font-bold">3 Revisão Espaçada</h4>
-                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Fixação profunda ativa</p>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white transition-transform" />
-              </button>
-
-              <button
-                onClick={() => setActivePlaygroundTab('diagnostico')}
-                className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
-                  activePlaygroundTab === 'diagnostico' 
-                    ? 'bg-amber-950/20 border-amber-500 text-white' 
-                    : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'diagnostico' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
+                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'dashboard' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
                     <BarChart3 className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold">4 Diagnóstico Predizer</h4>
-                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Risco e nota de corte real</p>
+                    <h4 className="text-xs sm:text-sm font-bold">Painel Principal</h4>
+                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Missão do dia + diagnóstico</p>
                   </div>
                 </div>
-                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white transition-transform" />
+                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white" />
               </button>
+
+              <button
+                onClick={() => setActivePlaygroundTab('treinar')}
+                className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
+                  activePlaygroundTab === 'treinar'
+                    ? 'bg-amber-950/20 border-amber-500 text-white'
+                    : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'treinar' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
+                    <BookOpen className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold">Treinar — Questões</h4>
+                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Questões CEBRASPE reais</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white" />
+              </button>
+
+              <button
+                onClick={() => setActivePlaygroundTab('cronograma')}
+                className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
+                  activePlaygroundTab === 'cronograma'
+                    ? 'bg-amber-950/20 border-amber-500 text-white'
+                    : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'cronograma' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold">Cronograma Semanal</h4>
+                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Planejamento adaptativo por IA</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white" />
+              </button>
+
+              <button
+                onClick={() => setActivePlaygroundTab('simulados')}
+                className={`w-full p-4 rounded-xl text-left border transition-all flex items-center justify-between group ${
+                  activePlaygroundTab === 'simulados'
+                    ? 'bg-amber-950/20 border-amber-500 text-white'
+                    : 'bg-white/[0.01] border-white/[0.06] hover:bg-white/[0.03] text-slate-400 hover:text-white'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 rounded-lg ${activePlaygroundTab === 'simulados' ? 'bg-amber-500/20 text-amber-400' : 'bg-white/[0.04] text-slate-400 group-hover:text-white'}`}>
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold">Simulador de Provas</h4>
+                    <p className="text-[10px] text-slate-500 group-hover:text-slate-400">Exames com penalidade CEBRASPE</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white" />
+              </button>
+
             </div>
 
-            {/* Simulated Live Action Window Console */}
-            <div className="lg:col-span-8 bg-white/[0.01] border border-white/[0.06] p-6 sm:p-8 rounded-2xl min-h-[380px] flex flex-col justify-between relative shadow-2xl overflow-hidden">
+            {/* Main preview panel */}
+            <div className="lg:col-span-8 bg-white/[0.01] border border-white/[0.06] p-5 sm:p-6 rounded-2xl min-h-[420px] flex flex-col justify-between relative shadow-2xl overflow-hidden">
               <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-[40px] pointer-events-none" />
-              
-              {/* Header inside simulated screen */}
+
+              {/* Browser chrome */}
               <div className="flex items-center justify-between pb-4 border-b border-white/[0.04] mb-4">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                   <span className="w-2.5 h-2.5 rounded-full bg-yellow-500" />
                   <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
-                  <span className="text-[10px] font-mono text-slate-500 ml-4">ATHENA CORE SIMULATOR v4.0</span>
+                  <span className="text-[10px] font-mono text-slate-500 ml-3">provaxai.com.br/dashboard</span>
                 </div>
-                <div>
-                  <span className="text-[10.5px] font-mono bg-slate-900 px-2 py-0.5 rounded text-amber-400 border border-white/[0.04]">
-                    {activePlaygroundTab.toUpperCase()} ACTIVE
-                  </span>
-                </div>
+                <span className="text-[10px] font-mono bg-emerald-500/10 px-2 py-0.5 rounded text-emerald-400 border border-emerald-500/20">● ao vivo</span>
               </div>
 
-              {/* Dynamic Content Rendering based on selected tab */}
-              <div className="flex-1 flex flex-col justify-center py-6">
-                
-                {/* 1. EDITAL WEB SIMULATOR */}
-                {activePlaygroundTab === 'edital' && (
-                  <div className="space-y-5">
-                    {simulationState === 'idle' && (
-                      <div className="text-center space-y-4">
-                        <div className="w-16 h-16 rounded-full border border-dashed border-[#F59E0B]/30 flex items-center justify-center mx-auto text-amber-500 bg-amber-500/5">
-                          <FileText className="w-7 h-7" />
-                        </div>
-                        <div className="space-y-1">
-                          <h4 className="text-xs sm:text-sm font-bold text-white">Carregue suas Noções ou Editais</h4>
-                          <p className="text-[11px] text-slate-400">Simule o upload de um PDF com regras ou leis estratégicas para a Athena extrair.</p>
-                        </div>
-                        <button
-                          onClick={handleStartSimulation}
-                          className="px-4 py-2 bg-amber-500 hover:bg-amber-450 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition-transform hover:scale-[1.01]"
-                        >
-                          Simular Upload e Análise da Athena
-                        </button>
+              <div className="flex-1 flex flex-col">
+
+                {/* ── PAINEL PRINCIPAL ── */}
+                {activePlaygroundTab === 'dashboard' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Suíte de Planejamento Estratégico</p>
+                        <h3 className="text-sm font-bold text-white mt-0.5">Bom dia, Candidato 👋</h3>
                       </div>
-                    )}
+                      <span className="text-[10px] font-mono bg-amber-500/10 border border-amber-500/20 text-amber-400 px-2 py-1 rounded-lg font-bold">92 dias para PRF</span>
+                    </div>
 
-                    {simulationState === 'running' && (
-                      <div className="space-y-4 text-center">
-                        <div className="flex justify-center">
-                          <RefreshCw className="w-8 h-8 text-amber-500 animate-spin" />
-                        </div>
-                        <div className="font-mono text-[11px] text-slate-400 space-y-1">
-                          <p className="animate-pulse">📂 Lendo arquivo de noções jurídicas...</p>
-                          <p className="opacity-75">✦ Cruzando com lei seca e súmulas do CEBRASPE...</p>
-                          <p className="opacity-50">⚡ Estruturando 15 cartões de aprendizagem adaptativos...</p>
-                        </div>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="bg-slate-950/70 border border-white/[0.06] rounded-xl p-3 text-center">
+                        <p className="text-[9px] font-mono text-slate-500 uppercase">Nota Líquida</p>
+                        <p className="text-xl font-black text-emerald-400 mt-0.5">+12</p>
+                        <p className="text-[9px] text-slate-500">pts acumulados</p>
                       </div>
-                    )}
-
-                    {simulationState === 'completed' && (
-                      <div className="space-y-4 text-left bg-slate-950/60 p-4.5 rounded-xl border border-white/[0.04] animate-fade-in text-xs sm:text-xs">
-                        <div className="flex items-center gap-1.5 text-amber-400 font-bold font-mono text-[10.5px]">
-                          <CheckCircle className="w-4 h-4 text-emerald-400" /> PROVAS E EDITAL PARSADOS COM SUCESSO!
-                        </div>
-                        <div className="space-y-2 text-slate-300">
-                          <p><strong>Edital mapeado:</strong> Polícia Rodoviária Federal - Bloco II e Legislação de Trânsito específica.</p>
-                          <p className="text-slate-400"><strong>Resultado estratégico:</strong> Foram priorizados o Art. 306 (Crime de Trânsito) e Resoluções CONTRAN que representam 40% das notas históricas de trânsito em concursos anteriores.</p>
-                        </div>
-                        <button
-                          onClick={() => setSimulationState('idle')}
-                          className="text-[10px] text-amber-400 hover:underline font-mono"
-                        >
-                          Repetir simulação ↻
-                        </button>
+                      <div className="bg-slate-950/70 border border-white/[0.06] rounded-xl p-3 text-center">
+                        <p className="text-[9px] font-mono text-slate-500 uppercase">Taxa de Acerto</p>
+                        <p className="text-xl font-black text-amber-400 mt-0.5">78%</p>
+                        <p className="text-[9px] text-slate-500">últimas 20 q.</p>
                       </div>
-                    )}
-                  </div>
-                )}
-
-                {/* 2. QUESTÕES POR IA WEB SIMULATOR */}
-                {activePlaygroundTab === 'questoes' && (
-                  <div className="space-y-4">
-                    {simulationState === 'idle' && (
-                      <div className="text-center space-y-4">
-                        <div className="max-w-xs mx-auto space-y-2">
-                          <label className="text-[11px] font-mono text-slate-500 uppercase block mb-1">Escolha o tópico de treinamento:</label>
-                          <select
-                            value={selectedTopic}
-                            onChange={(e) => setSelectedTopic(e.target.value)}
-                            className="w-full bg-[#0a0e1a] border border-white/[0.08] text-slate-205 rounded-lg text-xs p-2 focus:outline-none focus:border-amber-500"
-                          >
-                            <option value="Art. 306 CTB - Embriaguez ao Volante">Art. 306 CTB - Embriaguez ao Volante</option>
-                            <option value="Art. 144 CF - Segurança Pública">Art. 144 CF - Segurança Pública</option>
-                            <option value="Física Aplicada - Colisão Inelástica">Física Aplicada - Colisão Inelástica</option>
-                          </select>
-                        </div>
-                        <button
-                          onClick={handleStartSimulation}
-                          className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-lg transition-transform hover:scale-[1.01]"
-                        >
-                          Gerar Questão Inédita via Athena AI
-                        </button>
+                      <div className="bg-slate-950/70 border border-white/[0.06] rounded-xl p-3 text-center">
+                        <p className="text-[9px] font-mono text-slate-500 uppercase">Streak</p>
+                        <p className="text-xl font-black text-orange-400 mt-0.5">🔥 5</p>
+                        <p className="text-[9px] text-slate-500">dias seguidos</p>
                       </div>
-                    )}
+                    </div>
 
-                    {simulationState === 'running' && (
-                      <div className="text-center space-y-3">
-                        <div className="flex justify-center">
-                          <Sparkles className="w-8 h-8 text-amber-500 animate-pulse" />
-                        </div>
-                        <p className="font-mono text-[11px] text-slate-400 animate-pulse">
-                          Formatando questão inédita no padrão CEBRASPE (Certo/Errado) para o tópico: <strong>{selectedTopic}</strong>...
-                        </p>
-                      </div>
-                    )}
-
-                    {simulationState === 'completed' && (
-                      <div className="space-y-4 animate-fade-in text-left">
-                        <span className="bg-amber-400/10 border border-amber-500/20 text-amber-500 font-mono text-[9px] font-bold px-2 py-0.5 rounded uppercase">
-                          Questão Inédita Gerada p/ {selectedTopic}
-                        </span>
-                        
-                        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium bg-slate-950/40 p-4 rounded-xl border border-white/[0.04]">
-                          "Conforme dispositivo regulatório, conduzir veículo com concentração de álcool por litro de sangue igual ou superior a 6 decigramas resulta em crime trânsito formal, cuja consumação independe da ocorrência de sinistro ou dano efetivo."
-                        </p>
-
-                        {simulatedAnswer === null ? (
-                          <div className="flex gap-4 pt-1">
-                            <button
-                              onClick={() => setSimulatedAnswer(true)}
-                              className="flex-1 py-2 rounded-xl text-center border-2 border-emerald-500 bg-emerald-950/10 hover:bg-emerald-950/30 text-emerald-400 text-xs font-bold font-mono transition-transform hover:scale-[1.01]"
-                            >
-                              Certo (Verdadeiro!)
-                            </button>
-                            <button
-                              onClick={() => setSimulatedAnswer(false)}
-                              className="flex-1 py-2 rounded-xl text-center border border-white/[0.08] hover:border-slate-500 text-slate-400 hover:text-white text-xs font-bold font-mono transition-transform hover:scale-[1.01]"
-                            >
-                              Errado
-                            </button>
-                          </div>
-                        ) : (
-                          <div className="bg-slate-900 border border-white/[0.06] p-4.5 rounded-xl text-xs space-y-2 animate-fade-in relative">
-                            {simulatedAnswer === true ? (
-                              <p className="text-emerald-450 text-emerald-400 font-bold flex items-center gap-1.5 text-xs">
-                                🏆 RESPOSTA CERTA! PARABÉNS!
-                              </p>
-                            ) : (
-                              <p className="text-red-400 font-bold flex items-center gap-1.5 text-xs">
-                                ❌ O gabarito correto era: Certo.
-                              </p>
-                            )}
-                            <p className="text-slate-300 leading-relaxed">
-                              <strong>Justificativa Athena:</strong> O artigo 306 do CTB define crime de perigo abstrato. A comprovação de decigramas estabelecidos em teste de etilômetro ou laudo clínico já consuma o delito criminal, não exigindo risco concreto de acidente. Mantenha este resgaste forte na mente!
-                            </p>
-                            <button
-                              onClick={() => { setSimulatedAnswer(null); setSimulationState('idle'); }}
-                              className="text-[10px] text-amber-400 hover:underline font-mono pt-1 block"
-                            >
-                              Gerar Nova Questão ↻
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {/* 3. REVISÃO ESPAÇADA WEB SIMULATOR */}
-                {activePlaygroundTab === 'revisao' && (
-                  <div className="space-y-4">
-                    <div className="text-center max-w-sm mx-auto space-y-5">
-                      <p className="text-xs text-slate-400">Simule a interação de memorização sem as cores pretas pesadas de antes:</p>
-                      
-                      <div
-                        onClick={() => setIsFlippedPlayground(!isFlippedPlayground)}
-                        className={`p-6 rounded-2xl border text-center cursor-pointer transition-all h-36 flex flex-col justify-between items-center ${
-                          isFlippedPlayground 
-                            ? 'border-emerald-500 bg-emerald-950/10 shadow-lg shadow-emerald-500/5' 
-                            : 'border-white/[0.08] hover:border-slate-500 bg-gradient-to-b from-white/[0.01] to-white/[0.03]'
-                        }`}
-                      >
-                        <span className="text-[8.5px] font-mono uppercase bg-slate-900 border border-white/[0.06] px-2 py-0.5 rounded text-amber-400 font-bold tracking-wider mb-2">
-                          {isFlippedPlayground ? 'RESPOSTA DA ATHENA' : 'PERGUNTA / TÓPICO'}
-                        </span>
-                        
-                        <p className="text-xs sm:text-xs text-slate-200 leading-relaxed font-bold font-sans">
-                          {isFlippedPlayground 
-                            ? 'Pista simples: 100 km/h para automóveis, camionetas e motocicletas, e 90 km/h para os outros veículos.' 
-                            : 'Pista simples: Qual o limite de velocidade padrão estabelecido na lei para veículos na ausência de sinalização?'}
-                        </p>
-
-                        <span className="text-[9.5px] font-mono text-slate-500 underline mt-2 block">
-                          {isFlippedPlayground ? 'Clique para retornar' : 'Clique para Revelar Detalhes'}
+                    <div className="bg-slate-950/60 border border-white/[0.05] rounded-xl p-3">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">Missão do Dia</span>
+                        <span className="text-[9px] font-mono text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+                          {missionChecked.filter(Boolean).length}/3 concluídas
                         </span>
                       </div>
-
-                      {isFlippedPlayground && (
-                        <div className="flex gap-3 justify-center pt-2 animate-fade-in">
+                      <div className="space-y-1.5">
+                        {[
+                          { label: '10 questões de Legislação de Trânsito', type: 'questões', color: 'bg-indigo-500/10 text-indigo-400' },
+                          { label: 'Revisar 5 flashcards de Direito Penal', type: 'revisão', color: 'bg-purple-500/10 text-purple-400' },
+                          { label: 'Sessão Modo Foco — 25 minutos', type: 'teoria', color: 'bg-sky-500/10 text-sky-400' },
+                        ].map((task, i) => (
                           <button
-                            onClick={() => { setIsFlippedPlayground(false); }}
-                            className="bg-red-950/20 border border-red-900/40 hover:bg-red-950/45 text-red-450 p-2.5 rounded-xl text-[11px] font-bold font-mono transition-colors text-red-500"
+                            key={i}
+                            onClick={() => {
+                              const next = [...missionChecked];
+                              next[i] = !next[i];
+                              setMissionChecked(next);
+                            }}
+                            className={`w-full flex items-center gap-2.5 p-2 rounded-lg border text-left transition-all ${
+                              missionChecked[i]
+                                ? 'bg-emerald-950/15 border-emerald-500/25 text-slate-500'
+                                : 'bg-white/[0.02] border-white/[0.05] hover:border-white/[0.10] text-slate-300'
+                            }`}
                           >
-                            Eu esqueci
+                            <div className={`w-3.5 h-3.5 rounded flex items-center justify-center shrink-0 border ${missionChecked[i] ? 'bg-emerald-500 border-emerald-500' : 'border-slate-600'}`}>
+                              {missionChecked[i] && <Check className="w-2 h-2 text-white stroke-[3]" />}
+                            </div>
+                            <p className={`text-[11px] font-medium flex-1 truncate ${missionChecked[i] ? 'line-through opacity-50' : ''}`}>{task.label}</p>
+                            <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded shrink-0 ${task.color}`}>{task.type}</span>
                           </button>
-                          <button
-                            onClick={() => { setIsFlippedPlayground(false); }}
-                            className="bg-emerald-950/20 border border-emerald-900/40 hover:bg-emerald-950/45 text-emerald-450 p-2.5 rounded-xl text-[11px] font-bold font-mono transition-colors text-emerald-500"
-                          >
-                            Eu lembrei
-                          </button>
-                        </div>
-                      )}
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-amber-950/10 border border-amber-500/20 rounded-xl p-3 flex items-start gap-2">
+                      <span className="text-sm shrink-0">🦉</span>
+                      <div>
+                        <p className="text-[10px] font-mono font-bold text-amber-400 mb-0.5">Recomendação Athena</p>
+                        <p className="text-[11px] text-slate-300 leading-relaxed">Ritmo consistente. Foque em <strong className="text-white">Física Aplicada</strong> esta semana — 15 min/dia fecha o gap antes do próximo simulado.</p>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                {/* 4. DIAGNÓSTICO PREDITIVO WEB SIMULATOR */}
-                {activePlaygroundTab === 'diagnostico' && (
-                  <div className="space-y-4">
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-slate-400 font-semibold">Perfil de preparação do aluno:</span>
-                        <div className="flex gap-2 bg-slate-900 p-0.5 rounded-lg border border-white/[0.04]">
-                          <button
-                            onClick={() => setSelectedProfilePlayground('trabalhador')}
-                            className={`px-3 py-1 text-[10.5px] rounded-md font-mono ${
-                              selectedProfilePlayground === 'trabalhador' ? 'bg-[#0f152b] text-white border border-white/[0.05]' : 'text-slate-500 hover:text-white'
-                            }`}
-                          >
-                            Carlos (Trabalha 6h/Dia)
-                          </button>
-                          <button
-                            onClick={() => setSelectedProfilePlayground('dedicado')}
-                            className={`px-3 py-1 text-[10.5px] rounded-md font-mono ${
-                              selectedProfilePlayground === 'dedicado' ? 'bg-[#0f152b] text-white border border-white/[0.05]' : 'text-slate-500 hover:text-white'
-                            }`}
-                          >
-                            Mariana (Dedicado 8h/Dia)
-                          </button>
-                        </div>
+                {/* ── TREINAR — QUESTÕES CEBRASPE ── */}
+                {activePlaygroundTab === 'treinar' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[9px] font-mono bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded border border-indigo-500/20 font-bold uppercase">Legislação de Trânsito</span>
+                        <span className="text-[9px] font-mono bg-red-500/10 text-red-400 px-2 py-0.5 rounded border border-red-500/20 font-bold uppercase">Difícil</span>
                       </div>
+                      <span className="text-[10px] font-mono text-slate-500">Questão 3 de 10</span>
+                    </div>
 
-                      {/* Display Performance Predictive Output */}
-                      <div className="bg-slate-950/80 border border-white/[0.05] p-5 rounded-2xl space-y-4 text-left animate-fade-in text-xs sm:text-xs">
-                        <div className="flex justify-between items-center pb-2.5 border-b border-white/[0.04]">
+                    <div className="w-full h-1 bg-white/[0.06] rounded-full overflow-hidden">
+                      <div className="h-full bg-amber-500 rounded-full" style={{ width: '30%' }} />
+                    </div>
+
+                    <div className="bg-slate-950/60 border border-white/[0.07] rounded-xl p-4">
+                      <p className="text-[9px] font-mono text-slate-500 uppercase mb-2 tracking-wider">Art. 306 CTB · Certo ou Errado?</p>
+                      <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-medium">
+                        "Conduzir veículo com concentração de álcool igual ou superior a 6 decigramas por litro de sangue configura crime formal, cuja consumação independe de dano efetivo ao bem jurídico tutelado."
+                      </p>
+                    </div>
+
+                    {simulatedAnswer === null ? (
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          onClick={() => setSimulatedAnswer(true)}
+                          className="py-3 rounded-xl border-2 border-emerald-500/60 bg-emerald-950/10 hover:bg-emerald-950/30 text-emerald-400 text-xs font-bold font-mono transition-all hover:scale-[1.01]"
+                        >
+                          ✓ Certo
+                        </button>
+                        <button
+                          onClick={() => setSimulatedAnswer(false)}
+                          className="py-3 rounded-xl border border-red-500/40 bg-red-950/10 hover:bg-red-950/30 text-red-400 text-xs font-bold font-mono transition-all hover:scale-[1.01]"
+                        >
+                          ✕ Errado
+                        </button>
+                      </div>
+                    ) : (
+                      <div className={`rounded-xl p-4 border space-y-2 ${simulatedAnswer ? 'bg-emerald-950/15 border-emerald-500/30' : 'bg-red-950/15 border-red-500/30'}`}>
+                        <p className={`text-xs font-bold ${simulatedAnswer ? 'text-emerald-400' : 'text-red-400'}`}>
+                          {simulatedAnswer ? '🏆 Resposta correta! Gabarito: CERTO' : '❌ Gabarito: CERTO — você marcou Errado'}
+                        </p>
+                        <p className="text-[11px] text-slate-300 leading-relaxed">
+                          <strong>Athena:</strong> O Art. 306 CTB é crime de perigo abstrato. A consumação ocorre com a simples comprovação do nível de álcool, sem necessidade de dano concreto.
+                        </p>
+                        <button onClick={() => setSimulatedAnswer(null)} className="text-[10px] text-amber-400 hover:underline font-mono">
+                          Próxima questão ↻
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="flex items-center gap-4 text-[10px] font-mono pt-1">
+                      <span className="text-emerald-400 font-bold">✓ 2 corretas</span>
+                      <span className="text-red-400 font-bold">✕ 0 erradas</span>
+                      <span className="text-amber-400 font-bold ml-auto">Nota líquida: +2</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── CRONOGRAMA SEMANAL ── */}
+                {activePlaygroundTab === 'cronograma' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Semana atual · IA Adaptativo</p>
+                        <h3 className="text-sm font-bold text-white mt-0.5">Cronograma Personalizado</h3>
+                      </div>
+                      <div className="flex items-center gap-1 text-[9px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg">
+                        <RefreshCw className="w-2.5 h-2.5 mr-1" /> Atualizado pela IA
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {[
+                        { day: 'SEG', today: true, tasks: [{ name: 'Legislação de Trânsito', type: 'teoria', color: 'bg-indigo-500/10 text-indigo-400' }, { name: 'Língua Portuguesa', type: 'teoria', color: 'bg-purple-500/10 text-purple-400' }] },
+                        { day: 'TER', today: false, tasks: [{ name: 'Direito Penal', type: 'questões', color: 'bg-amber-500/10 text-amber-400' }, { name: 'Raciocínio Lógico', type: 'teoria', color: 'bg-sky-500/10 text-sky-400' }] },
+                        { day: 'QUA', today: false, tasks: [{ name: 'Legislação de Trânsito', type: 'questões', color: 'bg-indigo-500/10 text-indigo-400' }, { name: 'Dir. Administrativo', type: 'teoria', color: 'bg-teal-500/10 text-teal-400' }] },
+                        { day: 'QUI', today: false, tasks: [{ name: 'Língua Portuguesa', type: 'questões', color: 'bg-purple-500/10 text-purple-400' }, { name: 'Dir. Processual Penal', type: 'teoria', color: 'bg-rose-500/10 text-rose-400' }] },
+                        { day: 'SEX', today: false, tasks: [{ name: 'Legislação de Trânsito', type: 'teoria', color: 'bg-indigo-500/10 text-indigo-400' }, { name: 'Legislação Especial', type: 'revisão', color: 'bg-orange-500/10 text-orange-400' }] },
+                        { day: 'SAB', today: false, tasks: [{ name: 'Revisão Geral', type: 'revisão', color: 'bg-emerald-500/10 text-emerald-400' }, { name: 'Simulado Completo', type: 'simulado', color: 'bg-red-500/10 text-red-400' }] },
+                      ].map((row) => (
+                        <div key={row.day} className={`flex items-center gap-3 p-2 rounded-lg border ${row.today ? 'bg-amber-950/15 border-amber-500/30' : 'bg-white/[0.01] border-white/[0.04]'}`}>
+                          <div className={`w-8 text-center shrink-0 ${row.today ? 'text-amber-400' : 'text-slate-500'}`}>
+                            <p className="text-[9px] font-mono font-bold uppercase">{row.day}</p>
+                            {row.today && <div className="w-1 h-1 bg-amber-500 rounded-full mx-auto mt-0.5" />}
+                          </div>
+                          <div className="flex flex-wrap gap-1 flex-1">
+                            {row.tasks.map((t, ti) => (
+                              <span key={ti} className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${t.color}`}>
+                                {t.name} <span className="opacity-60">· {t.type}</span>
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ── SIMULADOR DE PROVAS ── */}
+                {activePlaygroundTab === 'simulados' && (
+                  <div className="space-y-3">
+                    {simulationState === 'idle' && (
+                      <>
+                        <div>
+                          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Escolha o modo de exame</p>
+                          <h3 className="text-sm font-bold text-white mt-0.5">Simulador de Provas</h3>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          {[
+                            { id: 'mini', label: 'Mini Simulado', desc: '5 questões · 10 min', icon: '⚡' },
+                            { id: 'completo', label: 'Simulado Completo', desc: '15 questões · 30 min', icon: '📋' },
+                            { id: 'cebraspe', label: 'Foco CEBRASPE', desc: 'Trânsito · 5 min', icon: '🎯' },
+                            { id: 'ia', label: 'IA Adaptativo', desc: 'Questões inéditas', icon: '🤖' },
+                          ].map((sim) => (
+                            <button
+                              key={sim.id}
+                              onClick={() => setSelectedProfilePlayground(sim.id)}
+                              className={`p-3 rounded-xl border text-left transition-all ${
+                                selectedProfilePlayground === sim.id
+                                  ? 'border-amber-500 bg-amber-950/15'
+                                  : 'border-white/[0.06] bg-white/[0.01] hover:border-white/[0.12]'
+                              }`}
+                            >
+                              <span className="text-base block mb-1">{sim.icon}</span>
+                              <p className="text-xs font-bold text-white">{sim.label}</p>
+                              <p className="text-[10px] text-slate-500 mt-0.5">{sim.desc}</p>
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="bg-slate-950/60 border border-white/[0.05] rounded-xl p-3 flex items-start gap-2">
+                          <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                          <p className="text-[10px] text-slate-400">Penalidade CEBRASPE: <strong className="text-white">1 errada anula 1 certa.</strong> Nota líquida calculada em tempo real.</p>
+                        </div>
+
+                        <button
+                          onClick={handleStartSimulation}
+                          className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all hover:scale-[1.01]"
+                        >
+                          Iniciar Simulado
+                        </button>
+                      </>
+                    )}
+
+                    {simulationState === 'running' && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
                           <div>
-                            <span className="text-[8px] font-mono text-slate-500 block uppercase font-bold">PLANO PREVISTO CEBRASPE</span>
-                            <strong className="text-slate-100 text-xs sm:text-sm">Conselho Athena p/ Próximo Turno</strong>
+                            <p className="text-[10px] font-mono text-slate-500 uppercase">Em andamento</p>
+                            <h3 className="text-sm font-bold text-white mt-0.5">Questão 2 de 5</h3>
                           </div>
-                          <span className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-mono font-bold">
-                            Nota Líquida: +78 Pontos
-                          </span>
+                          <div className="text-right">
+                            <p className="text-[9px] font-mono text-slate-500 uppercase">Tempo</p>
+                            <p className="text-lg font-black text-amber-400 font-mono">08:42</p>
+                          </div>
                         </div>
 
-                        {selectedProfilePlayground === 'trabalhador' ? (
-                          <div className="space-y-2 text-slate-300">
-                            <p><strong>Carlos</strong> possui 3h úteis diárias. A Athena otimizou seu cronograma, aplicando <strong>Legislação de Trânsito</strong> (Carga Pesada) nos sábados e fatias de 45 minutos de micro-revisões ativas de Direito Penal durante a semana.</p>
-                            <p className="text-slate-400">⭐ <strong>Estimativa de Aprovabilidade:</strong> 82% de probabilidade de passar se mantiver a consistência por mais 4 semanas.</p>
+                        <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                          <div className="h-full bg-amber-500 rounded-full animate-pulse" style={{ width: '40%' }} />
+                        </div>
+
+                        <div className="bg-slate-950/60 border border-white/[0.07] rounded-xl p-4 space-y-3">
+                          <p className="text-[9px] font-mono text-slate-500 uppercase">Direito Penal · Médio</p>
+                          <p className="text-xs text-slate-200 leading-relaxed font-medium">
+                            "O crime culposo se caracteriza pela imprudência, negligência ou imperícia, sendo a responsabilidade penal do agente sempre subjetiva, independente do resultado produzido."
+                          </p>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="py-2 rounded-lg border border-white/[0.08] text-center text-xs font-bold font-mono text-slate-400 hover:border-emerald-500/50 hover:text-emerald-400 cursor-pointer transition-all">✓ Certo</div>
+                            <div className="py-2 rounded-lg border border-white/[0.08] text-center text-xs font-bold font-mono text-slate-400 hover:border-red-500/50 hover:text-red-400 cursor-pointer transition-all">✕ Errado</div>
                           </div>
-                        ) : (
-                          <div className="space-y-2 text-slate-300">
-                            <p><strong>Mariana</strong> possui 6h úteis diárias. Ela já completou 92% da teoria do Bloco I e Direito Administrativo. Athena elevou seu plano para <strong>Simulados Completos com Penalidades</strong> e frentes de Física Aplicada avançada.</p>
-                            <p className="text-slate-400">⭐ <strong>Estimativa de Aprovabilidade:</strong> 94% de probabilidade histórica de classificação nas primeiras turmas da PRF.</p>
-                          </div>
-                        )}
+                        </div>
+
+                        <div className="flex items-center justify-between text-[10px] font-mono">
+                          <span className="text-emerald-400">✓ 1 correta</span>
+                          <span className="text-red-400">✕ 0 erradas</span>
+                          <span className="text-amber-400">Nota líquida: +1</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
+
+                    {simulationState === 'completed' && (
+                      <div className="space-y-3 text-center">
+                        <div className="text-4xl">🏆</div>
+                        <div>
+                          <p className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Simulado Concluído</p>
+                          <h3 className="text-lg font-black text-white mt-1">4 de 5 corretas</h3>
+                        </div>
+                        <div className="grid grid-cols-3 gap-2">
+                          <div className="bg-emerald-950/20 border border-emerald-500/20 rounded-xl p-3">
+                            <p className="text-sm font-black text-emerald-400">4</p>
+                            <p className="text-[9px] text-slate-500">corretas</p>
+                          </div>
+                          <div className="bg-red-950/20 border border-red-500/20 rounded-xl p-3">
+                            <p className="text-sm font-black text-red-400">1</p>
+                            <p className="text-[9px] text-slate-500">errada</p>
+                          </div>
+                          <div className="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3">
+                            <p className="text-sm font-black text-amber-400">+3</p>
+                            <p className="text-[9px] text-slate-500">nota líquida</p>
+                          </div>
+                        </div>
+                        <div className="bg-amber-950/10 border border-amber-500/20 rounded-xl p-3 text-left">
+                          <p className="text-[10px] font-mono text-amber-400 font-bold mb-1">🦉 Athena</p>
+                          <p className="text-[11px] text-slate-300">Ótimo desempenho. Revise <strong className="text-white">Direito Penal</strong> — padrão recorrente da banca CEBRASPE.</p>
+                        </div>
+                        <button onClick={() => setSimulationState('idle')} className="text-[10px] text-amber-400 hover:underline font-mono">
+                          Novo simulado ↻
+                        </button>
+                      </div>
+                    )}
                   </div>
                 )}
 
               </div>
 
-              {/* Console Prompt CTA footer info */}
-              <div className="mt-4 pt-4 border-t border-white/[0.04] text-[10.5px] text-slate-500 text-center flex justify-between items-center flex-wrap gap-2">
-                <span>Esta simulação tática reflete 100% da lógica real do ProvaX AI.</span>
-                <button
-                  onClick={onStartOnboarding}
-                  className="text-amber-400 font-bold font-mono hover:underline inline-flex items-center gap-1"
-                >
-                  Liberar Minhas Questões Reais <ArrowRight className="w-3 h-3" />
+              {/* Footer */}
+              <div className="mt-4 pt-4 border-t border-white/[0.04] text-[10.5px] text-slate-500 flex justify-between items-center flex-wrap gap-2">
+                <span>Interface 100% funcional no painel real da plataforma.</span>
+                <button onClick={onStartOnboarding} className="text-amber-400 font-bold font-mono hover:underline inline-flex items-center gap-1">
+                  Acessar Plataforma <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
-
             </div>
 
           </div>
@@ -934,7 +970,7 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
               </button>
             </div>
 
-            {/* Plan 3: Athena Gold (O Mais Vendido) */}
+            {/* Plan 3: Athena Supreme (O Mais Vendido) */}
             <div className="p-6 sm:p-8 bg-gradient-to-b from-[#0e162f] to-[#0a0e1a] border-2 border-amber-500 rounded-3xl flex flex-col justify-between space-y-8 text-left relative shadow-2xl shadow-amber-500/[0.03]">
               
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 bg-amber-500 rounded-full text-[9px] font-mono font-black text-slate-950 tracking-widest uppercase block leading-none">

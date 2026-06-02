@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useLocalStorage } from './hooks/useLocalStorage';
 import { UserOnboarding, StudySchedule, ProgressData, StudyTask, DailyMission, LibraryItem, Message, DaySchedule, TaskType, EditalTopic } from './types';
 import Onboarding from './components/Onboarding';
+import StreakWidget from './components/StreakWidget';
+import AppShell from './components/AppShell';
 import Dashboard from './components/Dashboard';
 import Treinar from './components/Treinar';
 import Simulados from './components/Simulados';
@@ -16,6 +19,8 @@ import AdminPanel from './components/AdminPanel';
 import EditalVerticalizado from './components/EditalVerticalizado';
 import { INITIAL_EDITAL_TOPICS } from './data/editalData';
 import { playSuccessSound, playClickSound, playCorrectSound, isSoundEnabled, setSoundEnabled } from './utils/audioEffects';
+import { recordProgressHistory, initHistory } from './utils/progressHistory';
+import { trackCredit, seedDemoData } from './lib/creditTracker';
 
 import { 
   ShieldAlert, Compass, BookOpen, Clock, Layers, Award, Flame, 
@@ -49,8 +54,8 @@ export default function App() {
     }
   };
 
-  // Onboarding metadata state
-  const [onboarding, setOnboarding] = useState<UserOnboarding | null>(null);
+  // Onboarding metadata state — persistido
+  const [onboarding, setOnboarding] = useLocalStorage<UserOnboarding | null>('provax-onboarding', null);
   const [inOnboardingFlow, setInOnboardingFlow] = useState<boolean>(false);
 
   const handleLoginDirectly = () => {
@@ -130,11 +135,12 @@ export default function App() {
     setCurrentTab('dashboard');
   };
   
-  // Custom Study plan schedule
-  const [schedule, setSchedule] = useState<StudySchedule | null>(null);
+  // Custom Study plan schedule — persistido
+  const [schedule, setSchedule] = useLocalStorage<StudySchedule | null>('provax-schedule', null);
 
-  // Dynamic Metrics Progress data
-  const [progress, setProgress] = useState<ProgressData>({
+  // Dynamic Metrics Progress data — persistido
+  const [progress, setProgress] = useLocalStorage<ProgressData>('provax-progress', {
+    approvalHistory: [],
     totalQuestionsAnswered: 12,
     totalCorrect: 9,
     totalIncorrect: 3,
@@ -163,8 +169,8 @@ export default function App() {
     }
   });
 
-  // Checklist of today done tasks
-  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+  // Checklist of today done tasks — persistido
+  const [completedTasks, setCompletedTasks] = useLocalStorage<string[]>('provax-completed-tasks', []);
 
   // Syllabus (Edital Verticalizado) state
   const [editalTopics, setEditalTopics] = useState<EditalTopic[]>(() => {
@@ -239,14 +245,14 @@ export default function App() {
     saveEditalTopics(updated);
   };
   
-  // Tab views
-  const [currentTab, setCurrentTab] = useState<string>('dashboard');
+  // Tab views — persistido
+  const [currentTab, setCurrentTab] = useLocalStorage<string>('provax-tab', 'dashboard');
   
   // Active selected card task to train in Pomodoro
   const [selectedTaskToTrain, setSelectedTaskToTrain] = useState<StudyTask | null>(null);
 
-  // User Library documents catalogo
-  const [library, setLibrary] = useState<LibraryItem[]>([
+  // User Library documents catalogo — persistido
+  const [library, setLibrary] = useLocalStorage<LibraryItem[]>('provax-library', [
     {
       id: 'doc-ctb-432',
       title: 'Resolução CONTRAN 432: Regulamentação da Bafômetro e Lei Seca',
@@ -265,11 +271,11 @@ export default function App() {
     }
   ]);
 
-  // Conversational thread history
-  const [messages, setMessages] = useState<Message[]>([]);
+  // Conversational thread history — persistido
+  const [messages, setMessages] = useLocalStorage<Message[]>('provax-messages', []);
 
-  // User subscription profile tier
-  const [subscriptionPlan, setSubscriptionPlan] = useState<'free' | 'essencial' | 'premium'>('free');
+  // User subscription profile tier — persistido
+  const [subscriptionPlan, setSubscriptionPlan] = useLocalStorage<'free' | 'essencial' | 'premium'>('provax-plan', 'free');
 
   // Mobile menu control toggles
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -501,13 +507,14 @@ export default function App() {
         // Add random correct answered question statistics to progress to simulate gain
         setProgress(old => {
           const addedProb = Math.round((old.currentApprovalProbability + 0.4) * 10) / 10;
-          return {
+          const updated = {
             ...old,
             totalQuestionsAnswered: old.totalQuestionsAnswered + 1,
             totalCorrect: old.totalCorrect + 1,
             overallAccuracyRate: Math.round(((old.totalCorrect + 1) / (old.totalQuestionsAnswered + 1)) * 100),
             currentApprovalProbability: Math.min(99.8, addedProb)
           };
+          return { ...updated, approvalHistory: recordProgressHistory(updated) };
         });
       }
       return updated;
@@ -557,7 +564,11 @@ export default function App() {
 
       const incorrects = isCorrect ? prev.totalIncorrect : prev.totalIncorrect + 1;
 
-      return {
+      const hoje = new Date().toISOString().split('T')[0];
+      const updatedStreak = prev.studyStreakHistory.includes(hoje)
+        ? prev.studyStreakHistory
+        : [...prev.studyStreakHistory, hoje];
+      const updated = {
         ...prev,
         totalQuestionsAnswered: answered,
         totalCorrect: corrects,
@@ -565,7 +576,9 @@ export default function App() {
         overallAccuracyRate: Math.round((corrects / answered) * 100),
         disciplinePerformance: updatedPerformance,
         currentApprovalProbability: updatedProb,
+        studyStreakHistory: updatedStreak,
       };
+      return { ...updated, approvalHistory: recordProgressHistory(updated) };
     });
   };
 
@@ -589,7 +602,7 @@ export default function App() {
       const bonusProb = Math.round((prev.currentApprovalProbability + 0.8) * 10) / 10;
       const hoje = new Date().toISOString().split('T')[0];
       const minutosHoje = prev.minutosHojeData === hoje ? prev.minutosHoje + minutes : minutes;
-      return {
+      const updated = {
         ...prev,
         syllabusCoverage: Math.min(100.0, bonusCoverage),
         currentApprovalProbability: Math.min(99.8, bonusProb),
@@ -597,6 +610,7 @@ export default function App() {
         minutosHoje,
         minutosHojeData: hoje,
       };
+      return { ...updated, approvalHistory: recordProgressHistory(updated, { minutos: minutosHoje }) };
     });
   };
 
@@ -605,7 +619,10 @@ export default function App() {
     setLibrary(prev => [newItem, ...prev]);
   };
 
-  // Conversations handler to Express Gemini API
+  // Seed dados demo na primeira vez
+  React.useEffect(() => { seedDemoData(); }, []);
+
+  // ── Handler de mensagens — Athena Claude ─────────────────────────────────
   const handleSendMessage = async (content: string) => {
     const userMsg: Message = {
       id: `u-${Date.now()}`,
@@ -618,30 +635,24 @@ export default function App() {
     setMessages(updatedMessages);
 
     try {
-      const provider = localStorage.getItem('athena_ai_provider') || 'gemini';
-      const openaiKey = localStorage.getItem('athena_openai_api_key') || '';
       const anthropicKey = localStorage.getItem('athena_anthropic_api_key') || '';
-      const geminiKey = localStorage.getItem('athena_gemini_api_key') || '';
-      const aiName = localStorage.getItem('athena_ai_name') || 'Athena AI';
-      const aiTone = localStorage.getItem('athena_ai_tone') || 'elite';
-      const aiStrictness = localStorage.getItem('athena_ai_strictness') || 'high';
+      const claudeModel   = localStorage.getItem('athena_claude_chat_model') || 'claude-haiku-3-5';
+      const aiName        = localStorage.getItem('athena_ai_name') || 'Athena AI';
+      const aiTone        = localStorage.getItem('athena_ai_tone') || 'elite';
       const aiCustomInstruction = localStorage.getItem('athena_ai_custom_instruction') || '';
 
       const response = await fetch('/api/chat-athena', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           messages: updatedMessages,
           onboarding,
           progress,
-          provider,
-          openaiKey,
           anthropicKey,
-          geminiKey,
+          claudeModel,
           aiName,
           aiTone,
-          aiStrictness,
-          aiCustomInstruction
+          aiCustomInstruction,
         }),
       });
       const data = await response.json();
@@ -655,7 +666,21 @@ export default function App() {
 
       setMessages(prev => [...prev, athenaMsg]);
 
-      // If user is highly diligent and talks to Athena, let's boost approval level slightly!
+      // Registrar crédito usado
+      const provider = (localStorage.getItem('athena_ai_provider') || 'anthropic') as any;
+      const model = provider === 'anthropic'
+        ? (localStorage.getItem('athena_claude_chat_model') || 'claude-haiku-3-5')
+        : provider === 'openai'
+        ? (localStorage.getItem('athena_gpt_chat_model') || 'gpt-4o-mini')
+        : (localStorage.getItem('athena_gemini_chat_model') || 'gemini-2.0-flash');
+      trackCredit({
+        studentId: onboarding?.name?.toLowerCase().replace(/\s/g, '_') || 'unknown',
+        studentName: onboarding?.name || 'Aluno',
+        action: 'chat',
+        provider: data.content ? provider : 'mock',
+        model,
+      });
+
       setProgress(old => ({
         ...old,
         currentApprovalProbability: Math.min(99.8, old.currentApprovalProbability + 0.1)
@@ -724,7 +749,8 @@ export default function App() {
         );
       case 'treinar':
         return (
-          <Treinar 
+          <Treinar
+            theme={theme}
             selectedTaskToTrain={selectedTaskToTrain}
             onQuestionAnswered={handleQuestionAnswered}
             onFocusCycleCompleted={handleFocusCycleCompleted}
@@ -733,7 +759,9 @@ export default function App() {
         );
       case 'simulados':
         return (
-          <Simulados 
+          <Simulados
+            theme={theme}
+            onNavigate={(tab: string) => { setCurrentTab(tab); }}
             onSimuladoFinished={(points: number, count: number, corrects: number, incorrects: number) => {
               setProgress(prev => {
                 const newTotal = prev.totalQuestionsAnswered + count;
@@ -741,7 +769,7 @@ export default function App() {
                 const newIncorrect = prev.totalIncorrect + incorrects;
                 const originalProb = prev.currentApprovalProbability;
                 const multiplier = points > (count * 0.6) ? 2.5 : -1.8;
-                return {
+                const updated = {
                   ...prev,
                   totalQuestionsAnswered: newTotal,
                   totalCorrect: newCorrect,
@@ -750,6 +778,7 @@ export default function App() {
                   currentApprovalProbability: Math.min(99.6, Math.max(10.5, Math.round((originalProb + multiplier) * 10) / 10)),
                   daysConsecutive: prev.daysConsecutive + 1
                 };
+                return { ...updated, approvalHistory: recordProgressHistory(updated) };
               });
             }}
           />
@@ -766,7 +795,8 @@ export default function App() {
         );
       case 'athena':
         return (
-          <Athena 
+          <Athena
+            theme={theme}
             onboarding={onboarding}
             progress={progress}
             messages={messages}
@@ -778,7 +808,8 @@ export default function App() {
         return <Progresso progress={progress} theme={theme} />;
       case 'biblioteca':
         return (
-          <Biblioteca 
+          <Biblioteca
+            theme={theme}
             library={library}
             onAddLibraryItem={handleAddLibraryItem}
             onQuestionAnswered={handleQuestionAnswered}
@@ -786,14 +817,16 @@ export default function App() {
         );
       case 'planos':
         return (
-          <Planos 
+          <Planos
+            theme={theme}
             currentPlanId={subscriptionPlan}
             onPlanUpgraded={(newPlan: 'free' | 'essencial' | 'premium') => setSubscriptionPlan(newPlan)}
           />
         );
       case 'contran':
         return (
-          <Treinar 
+          <Treinar
+            theme={theme}
             selectedTaskToTrain={selectedTaskToTrain}
             onQuestionAnswered={handleQuestionAnswered}
             onFocusCycleCompleted={handleFocusCycleCompleted}
@@ -854,216 +887,21 @@ export default function App() {
     );
   }
 
-  const getNavBtnClass = (itemId: string, isMobile: boolean = false) => {
-    const isActive = currentTab === itemId || (itemId === 'treinar' && currentTab === 'contran');
-    if (theme === 'light') {
-      return `w-full flex items-center gap-3.5 py-2.5 px-3.5 rounded-xl text-left ${isMobile ? 'text-sm font-bold' : 'text-xs sm:text-sm font-semibold'} transition-all select-none cursor-pointer ${
-        isActive
-          ? 'bg-[#e2e8f0] text-[#1e3a8a] border-l-4 border-[#eab308] shadow-sm translate-x-1 font-bold'
-          : 'text-slate-600 hover:text-[#1e3a8a] hover:bg-[#e2e8f0]/40'
-      }`;
-    } else {
-      return `w-full flex items-center gap-3.5 py-2.5 px-3.5 rounded-xl text-left ${isMobile ? 'text-sm font-bold' : 'text-xs sm:text-sm font-semibold'} transition-all select-none cursor-pointer ${
-        isActive
-          ? 'bg-emerald-950/40 text-white border-l-4 border-emerald-500 shadow-md translate-x-1 font-bold'
-          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
-      }`;
-    }
-  };
-
-  const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: <Compass className="w-4 h-4" /> },
-    { id: 'edital', label: 'Edital Verticalizado', icon: <Layers className="w-4 h-4" /> },
-    { id: 'treinar', label: 'Central de Treinamento', icon: <BookOpen className="w-4 h-4" /> },
-    { id: 'simulados', label: 'Simulados C/E', icon: <Award className="w-4 h-4" /> },
-    { id: 'cronograma', label: 'Cronograma', icon: <Clock className="w-4 h-4" /> },
-    { id: 'athena', label: 'Falar com Athena', icon: <MessageSquare className={`w-4 h-4 ${theme === 'light' ? 'text-yellow-400' : 'text-emerald-400'}`} /> },
-    { id: 'progresso', label: 'Meu Progresso', icon: <TrendingUp className="w-4 h-4" /> },
-    { id: 'biblioteca', label: 'Biblioteca IA', icon: <BookMarked className="w-4 h-4" /> },
-    { id: 'planos', label: 'Plano Pro', icon: <CreditCard className="w-4 h-4 text-slate-400" /> }
-  ];
-
   return (
-    <div className={`h-screen overflow-hidden bg-slate-950 text-slate-150 flex flex-col font-sans select-none prf-theme ${theme === 'light' ? 'light-theme' : ''}`} id="provax-application-workspace">
-      
-      {/* Dynamic top military header panel */}
-      <header className="bg-slate-900 border-b border-emerald-950/40 p-4 sticky top-0 z-40 flex items-center justify-between shadow-md" id="control-panel-header">
-        <div className="flex items-center gap-3">
-          {/* Mobile menu trigger */}
-          <button 
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 bg-slate-950 border border-slate-800 rounded-lg lg:hidden text-slate-400 hover:text-white shrink-0"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-
-          <div 
-            onClick={() => { setCurrentTab('dashboard'); playClickSound(); }}
-            className="cursor-pointer hover:opacity-90 transition-opacity flex items-center"
-          >
-            <Logo variant="compact" theme={theme} />
-          </div>
-        </div>
-
-        {/* Global persistent metrics tracker in header */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1 bg-slate-950 border border-slate-850 px-2.5 py-1.5 rounded-lg font-mono text-[10px] sm:text-xs">
-            <Flame className="w-4 h-4 text-red-500 animate-pulse" />
-            <span className="font-bold text-white uppercase">{progress.daysConsecutive} Dias</span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-1.5 bg-slate-950 border border-slate-850 px-3 py-1.5 rounded-lg font-mono text-xs">
-            <Award className={`w-4 h-4 ${theme === 'light' ? 'text-yellow-400' : 'text-emerald-500'}`} />
-            <span className="text-slate-400">Aprovação:</span>
-            <span className={`font-black ${theme === 'light' ? 'text-yellow-400' : 'text-emerald-400'}`}>{progress.currentApprovalProbability}%</span>
-          </div>
-
-          {subscriptionPlan === 'premium' && (
-            <span className="flex items-center gap-1 bg-yellow-500 text-slate-950 font-black font-mono text-[10px] px-2.5 py-1 rounded-lg uppercase tracking-wide shrink-0">
-              <Sparkles className="w-3 h-3 text-slate-950" /> Athena Gold
-            </span>
-          )}
-
-          {/* Theme switcher */}
-          <button 
-            onClick={toggleTheme}
-            className="p-2 hover:bg-slate-850 border border-slate-850 bg-slate-950 rounded-lg text-slate-400 hover:text-white cursor-pointer transition-colors hidden sm:flex"
-            title={theme === 'dark' ? 'Ativar Modo Claro' : 'Ativar Modo Escuro'}
-          >
-            {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-indigo-400" />}
-          </button>
-
-          {/* Sair button */}
-          <button
-            onClick={() => setOnboarding(null)}
-            className="p-2 hover:bg-red-950/20 border border-slate-850 bg-slate-950 rounded-lg text-slate-500 hover:text-red-400 cursor-pointer transition-colors hidden sm:flex"
-            title="Resetar Onboarding"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
-        </div>
-      </header>
-
-      <div className="flex-1 flex max-w-7xl w-full mx-auto overflow-hidden" id="application-body-layout">
-        
-        {/* LOGICAL SIDEBAR DESKTOP VIEW */}
-        <aside className="w-64 border-r border-slate-900 bg-slate-950 p-4 space-y-4 shrink-0 hidden lg:block" id="applet-sidebar">
-          <span className="text-[10px] font-mono uppercase text-slate-650 tracking-widest font-bold block pt-2">Operações PRF</span>
-          <nav className="space-y-1">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setCurrentTab(item.id)}
-                className={getNavBtnClass(item.id, false)}
-                id={`sidebar-tab-${item.id}`}
-              >
-                {item.icon}
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          <div className="pt-4 border-t border-slate-900 text-center">
-            <span className="text-[10px] font-mono text-slate-500 uppercase tracking-wider block pb-2 font-bold">Ambiente Gestor</span>
-            <button
-              onClick={() => { playClickSound(); setCurrentTab('admin'); }}
-              className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-amber-500/5 hover:bg-amber-500 text-amber-500 hover:text-slate-950 border border-amber-500/10 hover:border-transparent rounded-xl text-xs font-extrabold tracking-wider font-mono uppercase transition-all cursor-pointer shadow-md"
-              id="desktop-sidebar-admin-trigger"
-            >
-              <Shield className="w-4 h-4 animate-pulse" />
-              <span>Painel Admin IA</span>
-            </button>
-          </div>
-
-          <div className="pt-6 border-t border-slate-900 text-center select-text">
-            <span className="text-[10px] font-mono text-slate-600 block">Assinatura Ativa:</span>
-            <span className="text-xs font-mono font-bold uppercase text-slate-400">
-              {subscriptionPlan === 'free' ? 'Plano Gratuito Lite' : subscriptionPlan === 'essencial' ? 'Plano Essencial' : 'Athena Gold'}
-            </span>
-          </div>
-        </aside>
-
-        {/* MOBILE NAVIGATION DRAWER */}
-        {mobileMenuOpen && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 lg:hidden" id="mobile-navigation-drawer-backdrop">
-            <div className="w-64 h-full bg-slate-950 border-r border-slate-900 p-5 space-y-6 flex flex-col justify-between animate-slide-right">
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <span className={`font-bold text-xs uppercase font-mono ${theme === 'light' ? 'text-yellow-600' : 'text-emerald-400'}`}>Menu de Estudo</span>
-                  <button 
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="p-1.5 bg-slate-900 rounded text-slate-500 hover:text-white"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
- 
-                <nav className="space-y-1.5">
-                  {navItems.map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setCurrentTab(item.id);
-                        setMobileMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center gap-3.5 py-2.5 px-3.5 rounded-xl text-left text-sm font-bold transition-all ${
-                        currentTab === item.id || (item.id === 'treinar' && currentTab === 'contran')
-                          ? 'bg-emerald-950/40 text-white border-l-4 border-emerald-500 shadow-md translate-x-1'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
-                      }`}
-                    >
-                      {item.icon}
-                      {item.label}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-
-              <div className="border-t border-slate-900 pt-4 space-y-3">
-                {/* Mobile Admin Trigger */}
-                <button
-                  onClick={() => { playClickSound(); setCurrentTab('admin'); setMobileMenuOpen(false); }}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 px-3 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded-xl text-xs font-bold leading-none font-mono uppercase transition-all cursor-pointer"
-                >
-                  <Shield className="w-3.5 h-3.5 animate-pulse text-amber-500" />
-                  <span>Painel Admin IA</span>
-                </button>
-
-                <div>
-                  {/* Theme Switcher inside drawer */}
-                  <button 
-                    onClick={toggleTheme}
-                    className="w-full py-2.5 hover:bg-slate-850 border border-slate-850 bg-slate-900 rounded-lg text-slate-400 hover:text-white transition-colors flex justify-center items-center gap-1.5 text-xs font-mono font-bold cursor-pointer"
-                    title={theme === 'dark' ? 'Ativar Modo Claro' : 'Ativar Modo Escuro'}
-                  >
-                    {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-500" /> : <Moon className="w-4 h-4 text-indigo-400" />}
-                    <span>{theme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}</span>
-                  </button>
-                </div>
-
-                {/* Sair do Painel button inside drawer */}
-                <button
-                  onClick={() => { setOnboarding(null); setMobileMenuOpen(false); }}
-                  className="w-full py-2.5 bg-red-950/25 border border-red-900/40 text-red-400 hover:bg-red-950/45 rounded-lg font-bold font-mono text-center flex items-center justify-center gap-2 text-xs transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Sair do Painel</span>
-                </button>
-
-                <div className="text-center pt-2">
-                  <span className="text-xs font-mono text-slate-500 uppercase">APROVAÇÃO PRF</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* CENTRAL VIEWPORT VIEW */}
-        <main className="flex-1 p-4 sm:p-6 overflow-y-auto" id="application-viewport">
-          {renderActiveTab()}
-        </main>
-
+    <AppShell
+      currentTab={currentTab}
+      onTabChange={(tab) => { setCurrentTab(tab); playClickSound(); }}
+      onLogout={() => setOnboarding(null)}
+      theme={theme}
+      onToggleTheme={toggleTheme}
+      userName={onboarding?.name || 'Recruta'}
+      approvalProb={progress.currentApprovalProbability}
+      streak={progress.daysConsecutive}
+      subscriptionPlan={subscriptionPlan}
+    >
+      <div className={`prf-theme ${theme === 'light' ? 'light-theme' : ''}`}>
+        {renderActiveTab()}
       </div>
-    </div>
+    </AppShell>
   );
 }

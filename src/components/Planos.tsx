@@ -1,248 +1,275 @@
 import React, { useState } from 'react';
 import { SUBSCRIPTION_PLANS } from '../data/mockData';
-import { CreditCard, ShieldCheck, Sparkles, AlertCircle, CheckCircle, Flame, Gift } from 'lucide-react';
+import { CreditCard, ShieldCheck, Sparkles, AlertCircle, CheckCircle, X, Loader2, Gift, Zap } from 'lucide-react';
 
 interface PlanosProps {
   currentPlanId: 'free' | 'essencial' | 'premium';
   onPlanUpgraded: (planId: 'free' | 'essencial' | 'premium') => void;
+  theme?: 'dark' | 'light';
 }
 
-export default function Planos({ currentPlanId, onPlanUpgraded }: PlanosProps) {
-  const [selectedPlanToBuy, setSelectedPlanToBuy] = useState<any | null>(null);
-  const [showStripeModal, setShowStripeModal] = useState<boolean>(false);
-  const [cardNumber, setCardNumber] = useState<string>('');
-  const [cardExpiry, setCardExpiry] = useState<string>('');
-  const [cardCvc, setCardCvc] = useState<string>('');
-  const [cardName, setCardName] = useState<string>('');
-  const [paymentLoading, setPaymentLoading] = useState<boolean>(false);
-  const [paymentSuccess, setPaymentSuccess] = useState<boolean>(false);
+export default function Planos({ currentPlanId, onPlanUpgraded, theme = 'dark' }: PlanosProps) {
+  const d = theme === 'dark';
+  const [selectedPlan, setSelectedPlan] = useState<any | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvc, setCardCvc] = useState('');
+  const [cardName, setCardName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  const handleOpenStripeCheckout = (plan: any) => {
-    setSelectedPlanToBuy(plan);
-    setShowStripeModal(true);
-    setPaymentSuccess(false);
+  const handleBuy = (plan: any) => {
+    setSelectedPlan(plan);
+    setShowModal(true);
+    setSuccess(false);
   };
 
-  const handleStripePaymentSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setPaymentLoading(true);
-
-    // Simulate safe webhook routing
+    setLoading(true);
     setTimeout(() => {
-      setPaymentLoading(false);
-      setPaymentSuccess(true);
+      setLoading(false);
+      setSuccess(true);
       setTimeout(() => {
-        onPlanUpgraded(selectedPlanToBuy.id);
-        setShowStripeModal(false);
-        setSelectedPlanToBuy(null);
+        onPlanUpgraded(selectedPlan.id);
+        setShowModal(false);
+        setSelectedPlan(null);
       }, 1500);
     }, 2000);
   };
 
+  // Tokens de tema
+  const txt  = d ? 'text-white'     : 'text-slate-900';
+  const mut  = d ? 'text-slate-400' : 'text-slate-500';
+  const fnt  = d ? 'text-slate-500' : 'text-slate-400';
+  const bdr  = d ? 'border-white/[0.06]' : 'border-slate-200';
+  const cardBg = d ? 'bg-[#0d1117]' : 'bg-white';
+  const modalBg = d ? 'bg-[#0d1117] border border-white/[0.08]' : 'bg-white border border-slate-200 shadow-xl';
+  const inp  = d
+    ? 'bg-[#131a27] border border-white/[0.08] focus:border-indigo-500/60 text-white placeholder-slate-600'
+    : 'bg-slate-50 border border-slate-200 focus:border-indigo-400 text-slate-900 placeholder-slate-400';
+
+  const planMeta: Record<string, { badge?: string; highlight: boolean; accentClass: string; btnClass: string }> = {
+    free:      { highlight: false, accentClass: d ? 'border-white/[0.06]' : 'border-slate-200', btnClass: d ? 'border border-white/[0.1] hover:bg-white/[0.04] text-slate-300' : 'border border-slate-200 hover:bg-slate-50 text-slate-600' },
+    essencial: { highlight: false, accentClass: 'border-indigo-500/30', btnClass: 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20' },
+    premium:   { badge: 'Mais Popular 🏆', highlight: true, accentClass: 'border-amber-500/60', btnClass: 'bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-slate-950 shadow-lg shadow-amber-500/25' },
+  };
+
   return (
-    <div className="space-y-6" id="planos-tab-view">
-      
-      {/* Page Title */}
-      <div className="text-center space-y-2 select-none">
-        <span className="text-xs text-yellow-500 font-mono tracking-widest font-bold uppercase">PREMIUM ACCELERATOR</span>
-        <h2 className="text-3xl font-black text-white">Adquira seu Painel de Especialista</h2>
-        <p className="text-sm text-slate-400 max-w-lg mx-auto">
-          Turbine suas chances de aprovação liberando nosso simulador adaptativo por IA e mentoria ilimitada Athena.
-        </p>
-      </div>
+    <div className={`min-h-full prf-theme ${d ? '' : 'light-theme'} ${d ? 'bg-[#080b14]' : 'bg-slate-50'} font-sans`}>
+      <div className="max-w-5xl mx-auto px-4 py-8 space-y-8">
 
-      {/* Trial Countdown Highlight */}
-      {currentPlanId === 'free' && (
-        <div className="bg-gradient-to-r from-emerald-950/40 to-yellow-950/20 border border-yellow-700/30 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 max-w-2xl mx-auto">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl">🎁</span>
-            <div>
-              <h4 className="font-bold text-white text-xs sm:text-sm">7 Dias de Teste Grátis no Plano Premium AI</h4>
-              <p className="text-[11px] text-slate-400 font-sans">Experimente sem compromisso. Cancele com um clique se não desejar continuar.</p>
-            </div>
+        {/* Header */}
+        <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full">
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[11px] font-mono font-bold text-amber-400 uppercase tracking-widest">Premium Accelerator</span>
           </div>
-          <span className="text-[10px] uppercase font-mono font-bold bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-2.5 py-1 rounded">PRONTIDÃO</span>
+          <h1 className={`text-3xl font-black tracking-tight ${txt}`}>
+            Acelere sua rota até a nomeação
+          </h1>
+          <p className="text-sm text-slate-400 max-w-lg mx-auto">
+            Desbloqueie simulados adaptativos, mentoria ilimitada da Athena e diagnóstico preditivo de nota de corte.
+          </p>
         </div>
-      )}
 
-      {/* Plans pricing grids */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto" id="plans-pricing-display">
-        {SUBSCRIPTION_PLANS.map((plan) => {
-          const isCurrent = plan.id === currentPlanId;
-          const isGold = plan.id === 'premium';
+        {/* Trial banner */}
+        {currentPlanId === 'free' && (
+          <div className="flex items-center gap-4 bg-gradient-to-r from-emerald-950/40 to-indigo-950/40 border border-emerald-500/20 rounded-2xl p-4 max-w-2xl mx-auto">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0">
+              <Gift className="w-5 h-5 text-emerald-400" />
+            </div>
+            <div className="flex-1">
+              <p className={`text-sm font-bold ${txt}`}>7 Dias de Teste Grátis</p>
+              <p className="text-xs text-slate-400 mt-0.5">Experimente sem compromisso. Cancele com um clique se não desejar continuar.</p>
+            </div>
+            <span className="text-[10px] font-mono font-bold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2.5 py-1 rounded-lg whitespace-nowrap">
+              Sem cartão
+            </span>
+          </div>
+        )}
 
-          return (
-            <div 
-              key={plan.id}
-              className={`p-6 rounded-2xl border flex flex-col justify-between transition-all relative ${
-                isGold 
-                  ? 'bg-gradient-to-b from-slate-900 to-emerald-950/25 border-yellow-500 shadow-xl shadow-emerald-950/30 scale-[1.02]' 
-                  : 'bg-slate-950 border-slate-850 shadow'
-              }`}
-            >
-              {isGold && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-slate-950 font-black font-mono text-[9px] px-3 py-1 rounded-full uppercase tracking-wider shadow">
-                  A Mais Ofertada 🛡️
-                </span>
-              )}
+        {/* Planos */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+          {SUBSCRIPTION_PLANS.map(plan => {
+            const meta = planMeta[plan.id] || planMeta.free;
+            const isCurrent = plan.id === currentPlanId;
 
-              <div className="space-y-4">
-                {/* Title and price */}
-                <div className="space-y-1.5 border-b border-slate-900 pb-4">
-                  <h3 className="font-extrabold text-lg text-white font-mono">{plan.name}</h3>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-sm font-semibold text-color-slate-350 text-slate-350">R$</span>
-                    <span className="text-4xl font-extrabold text-white font-mono tracking-tight">{plan.price.toFixed(2).split('.')[0]}</span>
-                    <span className="text-xs font-semibold text-slate-400">,{plan.price.toFixed(2).split('.')[1]}/mês</span>
+            const isPremium = meta.highlight;
+            return (
+              <div
+                key={plan.id}
+                className={`relative rounded-2xl border p-6 flex flex-col transition-all
+                  ${isPremium
+                    ? 'bg-gradient-to-b from-[#1a1000] via-[#120d00] to-[#0d1117] shadow-2xl shadow-amber-500/15 scale-[1.02]'
+                    : cardBg}
+                  ${meta.accentClass}`}
+              >
+                {/* Barra superior dourada no premium */}
+                {isPremium && (
+                  <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent rounded-t-2xl" />
+                )}
+
+                {meta.badge && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 text-[9px] font-mono font-black px-4 py-1.5 rounded-full uppercase tracking-wider whitespace-nowrap shadow-lg shadow-amber-500/30 flex items-center gap-1">
+                    🏆 {meta.badge}
                   </div>
+                )}
+
+                <div className="space-y-4 flex-1">
+                  {/* Nome e preço */}
+                  <div className={`pb-4 border-b ${isPremium ? 'border-amber-500/20' : bdr}`}>
+                    <h3 className={`text-base font-black ${isPremium ? 'text-amber-400' : txt}`}>
+                      {plan.name}
+                    </h3>
+                    <div className="flex items-baseline gap-1 mt-2">
+                      <span className={`text-sm font-mono ${isPremium ? 'text-amber-500/70' : 'text-slate-500'}`}>R$</span>
+                      <span className={`text-4xl font-black font-mono tracking-tight ${isPremium ? 'text-white' : txt}`}>
+                        {plan.price.toFixed(2).split('.')[0]}
+                      </span>
+                      <span className={`text-xs ${isPremium ? 'text-amber-500/70' : 'text-slate-500'}`}>
+                        ,{plan.price.toFixed(2).split('.')[1]}/mês
+                      </span>
+                    </div>
+                    {plan.isTrial && (
+                      <p className="text-[10px] text-emerald-400 font-mono mt-1.5 flex items-center gap-1">
+                        <span className="text-emerald-400">✓</span> 7 dias grátis — sem cobrança imediata
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Features */}
+                  <ul className="space-y-2.5">
+                    {plan.features.map((feat, i) => (
+                      <li key={i} className={`flex items-start gap-2 text-xs leading-relaxed ${isPremium ? 'text-slate-200' : d ? 'text-slate-300' : 'text-slate-600'}`}>
+                        <span className={`mt-0.5 shrink-0 font-bold ${isPremium ? 'text-amber-400' : 'text-emerald-400'}`}>✓</span>
+                        {feat}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
 
-                {/* Features checklist */}
-                <ul className="space-y-2.5 pt-2 select-text">
-                  {plan.features.map((feat, fIdx) => (
-                    <li key={fIdx} className="text-xs text-slate-200 flex items-start gap-2 leading-relaxed">
-                      <span className={`text-sm shrink-0 ${isGold ? 'text-yellow-500' : 'text-emerald-400'}`}>✓</span>
-                      <span>{feat}</span>
-                    </li>
-                  ))}
-                </ul>
+                {/* CTA */}
+                <div className={`mt-6 pt-5 border-t ${isPremium ? 'border-amber-500/15' : bdr}`}>
+                  {isCurrent ? (
+                    <div className="w-full py-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold flex items-center justify-center gap-2">
+                      <ShieldCheck className="w-4 h-4" /> Plano Ativo
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => handleBuy(plan)}
+                      className={`w-full py-3.5 rounded-xl text-sm font-bold transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer ${meta.btnClass}`}
+                    >
+                      {plan.price === 0 ? 'Começar Grátis' : 'Assinar Agora'}
+                    </button>
+                  )}
+                </div>
               </div>
+            );
+          })}
+        </div>
 
-              {/* Purchase CTA buttons */}
-              <div className="pt-6 border-t border-slate-900 mt-6">
-                {isCurrent ? (
-                  <div className="btn-plan-active py-2.5 text-xs uppercase tracking-wider font-semibold">
-                    <ShieldCheck className="w-4 h-4 shrink-0" />
-                    <span>Plano Ativo</span>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => handleOpenStripeCheckout(plan)}
-                    className={`py-2.5 text-xs tracking-wide transition-all ${
-                      isGold ? 'btn-plan-cta-premium' : 'btn-plan-cta-standard'
-                    }`}
-                  >
-                    {plan.price === 0 ? 'Iniciar Teste' : 'Assinar via Stripe'}
-                  </button>
-                )}
-              </div>
-            </div>
-          );
-        })}
+        {/* Rodapé de segurança */}
+        <p className="text-center text-[11px] text-slate-600 font-mono">
+          🔒 SSL · Processamento Stripe · Cancelamento autônomo a qualquer momento
+        </p>
+
       </div>
 
-      {/* STRIPE SECURE CREDIT CARD IFRAME OVERLAY MODAL */}
-      {showStripeModal && selectedPlanToBuy && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 max-w-md w-full rounded-2xl p-6 shadow-2xl relative animate-scale-up" id="stripe-checkout-modal">
-            
-            {/* Stripe branded header mock */}
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-4 select-none">
-              <div className="flex items-center gap-1.5 font-mono text-xs font-black tracking-widest text-slate-400">
-                <span className="bg-indigo-600 text-white px-2 py-0.5 rounded font-black font-sans-serif">stripe</span>
-                <b>Checkout Seguro</b>
+      {/* Modal de Pagamento */}
+      {showModal && selectedPlan && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className={`${modalBg} max-w-md w-full rounded-2xl p-6 shadow-2xl shadow-black/40`}>
+
+            {/* Header modal */}
+            <div className={`flex items-center justify-between pb-4 border-b ${bdr} mb-5`}>
+              <div className="flex items-center gap-2">
+                <div className="px-2 py-0.5 bg-indigo-600 rounded text-white text-xs font-black">stripe</div>
+                <span className="text-xs font-mono font-bold text-slate-400">Checkout Seguro</span>
               </div>
-              <button 
-                onClick={() => setShowStripeModal(false)}
-                className="text-xs text-slate-500 hover:text-white"
-              >
-                ✕
+              <button onClick={() => setShowModal(false)} className={`transition-colors cursor-pointer ${d ? 'text-slate-500 hover:text-white' : 'text-slate-400 hover:text-slate-900'}`}>
+                <X className="w-4 h-4" />
               </button>
             </div>
 
-            {paymentSuccess ? (
-              <div className="text-center py-8 space-y-3" id="stripe-success-pane">
-                <div className="bg-emerald-950/50 border border-emerald-500/20 text-emerald-400 p-4 rounded-full w-14 h-14 mx-auto flex items-center justify-center animate-bounce">
-                  <CheckCircle className="w-8 h-8" />
+            {success ? (
+              <div className="text-center py-10 space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-8 h-8 text-emerald-400" />
                 </div>
-                <h4 className="font-bold text-white text-lg">Assinatura Ativada!</h4>
-                <p className="text-xs text-emerald-400 font-mono">Boas-vindas ao ProvaX AI Premium Athena Gold!</p>
+                <div>
+                  <h4 className={`text-lg font-black ${txt}`}>Assinatura Ativada!</h4>
+                  <p className="text-xs text-emerald-400 font-mono mt-1">Bem-vindo ao ProvaX AI Premium!</p>
+                </div>
               </div>
             ) : (
-              <form onSubmit={handleStripePaymentSubmit} className="space-y-4" id="stripe-credit-card-form">
-                
-                <div className="text-center pb-2">
-                  <p className="text-xs text-slate-400">Adquirindo</p>
-                  <h4 className="font-bold text-white text-base">{selectedPlanToBuy.name} — R$ {selectedPlanToBuy.price.toFixed(2)}/mês</h4>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="text-center mb-2">
+                  <p className="text-xs text-slate-500">Assinando</p>
+                  <h4 className={`text-base font-black mt-0.5 ${txt}`}>
+                    {selectedPlan.name} — R$ {selectedPlan.price.toFixed(2)}/mês
+                  </h4>
                 </div>
 
-                {/* Card input field */}
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-mono uppercase text-slate-400 font-semibold">Número do Cartão</label>
-                  <div className="relative">
-                    <CreditCard className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
-                    <input 
-                      type="text"
-                      required
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 16))}
-                      placeholder="4000 1234 5678 9010"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pl-9 pr-4 text-xs text-white focus:outline-none focus:border-emerald-500"
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-[10px] font-mono font-bold uppercase text-slate-500 mb-1.5">Número do Cartão</label>
+                    <div className="relative">
+                      <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                      <input
+                        type="text" required value={cardNumber}
+                        onChange={e => setCardNumber(e.target.value.replace(/\D/g, '').slice(0, 16))}
+                        placeholder="4000 1234 5678 9010"
+                        className={`w-full rounded-xl py-2.5 pl-9 pr-4 text-sm outline-none transition-all ${inp}`}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { label: 'Validade', value: cardExpiry, set: setCardExpiry, ph: 'MM/AA', max: 5, type: 'text' },
+                      { label: 'CVC', value: cardCvc, set: (v: string) => setCardCvc(v.replace(/\D/g,'').slice(0,3)), ph: '123', max: 3, type: 'password' },
+                    ].map(f => (
+                      <div key={f.label}>
+                        <label className="block text-[10px] font-mono font-bold uppercase text-slate-500 mb-1.5">{f.label}</label>
+                        <input
+                          type={f.type} required value={f.value}
+                          onChange={e => f.set(e.target.value.slice(0, f.max))}
+                          placeholder={f.ph}
+                          className={`w-full rounded-xl py-2.5 px-3 text-sm outline-none transition-all ${inp}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-mono font-bold uppercase text-slate-500 mb-1.5">Nome no Cartão</label>
+                    <input
+                      type="text" required value={cardName}
+                      onChange={e => setCardName(e.target.value)}
+                      placeholder="TITULAR DO CARTÃO"
+                      className={`w-full rounded-xl py-2.5 px-3 text-sm outline-none transition-all uppercase ${inp}`}
                     />
                   </div>
                 </div>
 
-                {/* Expiries and CVC details */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-mono uppercase text-slate-400 font-semibold">Validade</label>
-                    <input 
-                      type="text"
-                      required
-                      value={cardExpiry}
-                      onChange={(e) => setCardExpiry(e.target.value.slice(0, 5))}
-                      placeholder="MM/AA"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-emerald-500"
-                    />
-                  </div>
-                  <div className="space-y-1">
-                    <label className="block text-[10px] font-mono uppercase text-slate-400 font-semibold">CVC / Código</label>
-                    <input 
-                      type="password"
-                      required
-                      value={cardCvc}
-                      onChange={(e) => setCardCvc(e.target.value.replace(/\D/g, '').slice(0, 3))}
-                      placeholder="123"
-                      className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-emerald-500"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-mono uppercase text-slate-400 font-semibold">Nome no Cartão</label>
-                  <input 
-                    type="text"
-                    required
-                    value={cardName}
-                    onChange={(e) => setCardName(e.target.value)}
-                    placeholder="TITULAR DO CARTÃO"
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 px-3 text-xs text-white focus:outline-none focus:border-emerald-500 uppercase"
-                  />
-                </div>
-
-                <div className="bg-slate-950 p-3 rounded-lg border border-slate-850 text-[10px] text-slate-400 leading-normal flex items-start gap-1.5 select-none">
-                  <AlertCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                  <span>Este é um ambiente simulado para demonstração do ecossistema Lovable + Stripe. Não insira dados de cartões reais. Use cartões fictícios (ex: 4000 1234...).</span>
+                <div className="flex items-start gap-2 bg-amber-500/5 border border-amber-500/15 rounded-xl p-3">
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0 mt-0.5" />
+                  <p className="text-[10px] text-slate-500 leading-relaxed">
+                    Ambiente simulado. Não insira dados reais. Use cartões fictícios (ex: 4000 1234 5678 9010).
+                  </p>
                 </div>
 
                 <button
-                  type="submit"
-                  disabled={paymentLoading}
-                  className="w-full py-3 bg-emerald-600 hover:bg-emerald-505 hover:bg-emerald-500 text-white font-extrabold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-lg shadow-emerald-900/10"
+                  type="submit" disabled={loading}
+                  className="w-full py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-all disabled:opacity-60 cursor-pointer shadow-lg shadow-indigo-500/20"
                 >
-                  {paymentLoading ? (
-                    <>Processando Transação...</>
-                  ) : (
-                    <>Pagar R$ {selectedPlanToBuy.price.toFixed(2)}</>
-                  )}
+                  {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Processando...</> : <>Pagar R$ {selectedPlan.price.toFixed(2)}</>}
                 </button>
               </form>
             )}
-
           </div>
         </div>
       )}
-
     </div>
   );
 }

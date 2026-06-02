@@ -90,6 +90,14 @@ export interface LibraryItem {
   type: 'PDF' | 'Anotação' | 'Link YouTube' | 'Apostila';
 }
 
+export interface ApprovalHistoryEntry {
+  date: string;      // YYYY-MM-DD
+  prob: number;      // probabilidade de aprovação
+  questoes: number;  // questões respondidas no dia
+  acerto: number;    // % acerto no dia
+  minutos: number;   // minutos estudados no dia
+}
+
 export interface ProgressData {
   daysConsecutive: number;
   currentApprovalProbability: number; // e.g. 42% -> 92%
@@ -100,6 +108,7 @@ export interface ProgressData {
   minutosHoje: number;      // minutos de foco acumulados hoje
   minutosHojeData: string;  // YYYY-MM-DD para reset diário
   syllabusCoverage: number; // %
+  approvalHistory: ApprovalHistoryEntry[]; // histórico real de evolução
   disciplinePerformance: {
     [discipline: string]: {
       total: number;

@@ -406,56 +406,53 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
     return prfOfficerPhrases[2];
   };
 
+  const d = !isLight;
+  const txt = d ? 'text-white'    : 'text-slate-900';
+  const mut = d ? 'text-slate-400': 'text-slate-500';
+  const fnt = d ? 'text-slate-500': 'text-slate-400';
+  const bdr = d ? 'border-white/[0.06]' : 'border-slate-200';
+  const cardCls = d ? 'bg-[#0d1117] border border-white/[0.06]' : 'bg-white border border-slate-200 shadow-sm';
+  const raisedCls = d ? 'bg-[#131a27]' : 'bg-slate-100';
+
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-8" id="cronograma-view-container">
-      
-      {/* 1. HEADER CONTROLS */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+    <div className={`min-h-full prf-theme ${d ? '' : 'light-theme'} ${d ? 'bg-[#080b14]' : 'bg-slate-50'} font-sans`} id="cronograma-view-container">
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
+
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
-          <span className="text-xs text-emerald-400 font-mono tracking-widest font-semibold uppercase">METODOLOGIA ADAPTATIVA ATHENA</span>
-          <h2 className="text-2xl font-black text-white leading-tight">Cronograma Mapeado pela Athena</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Plano adaptativo distribuído para o concurso de **{onboardingData?.role === 'PRF' ? 'Policial Rodoviário Federal (PRF)' : (onboardingData?.role || 'PRF')}**.
+          <p className={`text-[11px] font-mono font-bold uppercase tracking-widest ${fnt}`}>Metodologia Adaptativa Athena</p>
+          <h1 className={`text-2xl font-black tracking-tight mt-1 ${txt}`}>Cronograma</h1>
+          <p className={`text-sm mt-0.5 ${mut}`}>
+            Plano adaptativo para {onboardingData?.role === 'PRF' ? 'Policial Rodoviário Federal (PRF)' : (onboardingData?.role || 'PRF')}.
           </p>
         </div>
 
-        <div className="flex items-center gap-3 self-start sm:self-auto flex-wrap">
-          <div className="bg-slate-950 p-1 rounded-lg border border-slate-850 flex items-center shrink-0">
-            <button
-              onClick={() => setViewType('weekly')}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-all ${
-                viewType === 'weekly' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Semanal
-            </button>
-            <button
-              onClick={() => setViewType('monthly')}
-              className={`px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-all ${
-                viewType === 'monthly' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:text-slate-300'
-              }`}
-            >
-              Mensal
-            </button>
+        <div className="flex items-center gap-2 flex-wrap shrink-0">
+          {/* Toggle semanal/mensal */}
+          <div className={`flex p-1 rounded-xl border ${d ? 'bg-[#0d1117] border-white/[0.06]' : 'bg-white border-slate-200 shadow-sm'}`}>
+            {(['weekly', 'monthly'] as const).map(v => (
+              <button key={v} onClick={() => setViewType(v)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  viewType === v
+                    ? d ? 'bg-white/[0.08] text-white' : 'bg-indigo-50 text-indigo-700'
+                    : `${mut} hover:${txt}`
+                }`}>
+                {v === 'weekly' ? 'Semanal' : 'Mensal'}
+              </button>
+            ))}
           </div>
 
-          <button
-            onClick={handeRecalibrate}
-            disabled={isRecalibrating}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold text-yellow-500 hover:text-yellow-400 hover:border-yellow-500/25 hover:bg-slate-900 transition-all disabled:opacity-45 cursor-pointer"
-            id="btn-recalibrate-cronograma"
-          >
+          <button onClick={handeRecalibrate} disabled={isRecalibrating}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-bold transition-all disabled:opacity-50 cursor-pointer ${d ? 'bg-[#0d1117] border-white/[0.06] text-amber-400 hover:border-amber-500/30' : 'bg-white border-slate-200 text-amber-600 hover:border-amber-300 shadow-sm'}`}>
             <RefreshCw className={`w-3.5 h-3.5 ${isRecalibrating ? 'animate-spin text-emerald-500' : ''}`} />
             Recalibrar IA
           </button>
 
-          <button
-            onClick={() => setShowSettings(true)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg text-xs font-bold text-slate-300 hover:text-white hover:border-slate-750 hover:bg-slate-900 transition-all cursor-pointer"
-            id="btn-settings-cronograma"
-          >
-            <Settings className="w-3.5 h-3.5 text-slate-400" />
-            <span>Configurar Carga</span>
+          <button onClick={() => setShowSettings(true)}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${d ? 'bg-[#0d1117] border-white/[0.06] text-slate-300 hover:text-white' : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 shadow-sm'}`}>
+            <Settings className="w-3.5 h-3.5" />
+            Configurar
           </button>
         </div>
       </div>
@@ -481,53 +478,91 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
               const totalHrs = Math.round((totalMins / 60) * 10) / 10;
               const isWeekend = cleanDay === 'Sábado' || cleanDay === 'Domingo';
 
+              // Cores de atividade com suporte a tema
+              const actBadge = (type: string) => {
+                if (d) {
+                  if (type === 'teoria')   return 'bg-blue-950/60 text-blue-400 border border-blue-900/30';
+                  if (type === 'questões') return 'bg-amber-950/60 text-amber-400 border border-amber-900/30';
+                  if (type === 'revisão')  return 'bg-violet-950/60 text-violet-400 border border-violet-900/30';
+                  return 'bg-red-950/60 text-red-400 border border-red-900/30';
+                } else {
+                  if (type === 'teoria')   return 'bg-blue-50 text-blue-700 border border-blue-200';
+                  if (type === 'questões') return 'bg-amber-50 text-amber-700 border border-amber-200';
+                  if (type === 'revisão')  return 'bg-violet-50 text-violet-700 border border-violet-200';
+                  return 'bg-red-50 text-red-700 border border-red-200';
+                }
+              };
+              const actStrip = (type: string) => {
+                if (type === 'teoria')   return 'bg-blue-500';
+                if (type === 'questões') return 'bg-amber-500';
+                if (type === 'revisão')  return 'bg-violet-500';
+                return 'bg-red-500';
+              };
+              const actLabel = (type: string) => {
+                if (type === 'teoria')   return 'Teoria';
+                if (type === 'questões') return 'Questões';
+                if (type === 'revisão')  return 'Revisão';
+                return 'Simulado';
+              };
+
               return (
-                <div 
-                  key={day.dayOfWeek} 
-                  className={`bg-slate-950 rounded-2xl border flex flex-col justify-between overflow-hidden shadow-2xl transition-all ${
-                    isWeekend 
-                      ? 'border-amber-500/15 bg-gradient-to-b from-[#0e1326] to-slate-950' 
-                      : 'border-slate-850 hover:border-slate-800'
+                <div
+                  key={day.dayOfWeek}
+                  className={`rounded-2xl border flex flex-col overflow-hidden transition-all ${
+                    d
+                      ? isWeekend
+                        ? 'bg-gradient-to-b from-amber-950/10 to-[#0d1117] border-amber-500/20'
+                        : 'bg-[#0d1117] border-white/[0.06] hover:border-white/[0.1]'
+                      : isWeekend
+                        ? 'bg-amber-50 border-amber-200 shadow-sm'
+                        : 'bg-white border-slate-200 shadow-sm hover:border-slate-300'
                   }`}
                 >
-                  {/* Card head: Larger and much more distinct */}
-                  <div className={`p-4 border-b border-slate-900 flex items-center justify-between ${
-                    isWeekend ? 'bg-amber-500/[0.02]' : 'bg-slate-900/10'
+                  {/* Cabeçalho do dia */}
+                  <div className={`px-4 py-3 border-b flex items-center justify-between ${
+                    d
+                      ? isWeekend ? 'border-amber-500/10 bg-amber-500/[0.03]' : 'border-white/[0.04]'
+                      : isWeekend ? 'border-amber-200 bg-amber-100/50' : 'border-slate-100 bg-slate-50'
                   }`}>
                     <div>
-                      <h4 className={`text-base font-black uppercase tracking-wider font-sans ${
-                        isWeekend ? 'text-amber-400' : 'text-slate-100'
+                      <h4 className={`text-sm font-black tracking-wide ${
+                        isWeekend
+                          ? 'text-amber-500'
+                          : d ? 'text-white' : 'text-slate-800'
                       }`}>
                         {cleanDay === 'Sábado' ? 'Sábado' : cleanDay === 'Domingo' ? 'Domingo' : `${cleanDay}-feira`}
                       </h4>
-                      <p className="text-[10px] font-mono text-slate-500 mt-0.5 uppercase tracking-widest font-bold">
-                        {isWeekend ? 'Consolidação e Simulados' : 'Estudo de Matérias'}
+                      <p className={`text-[10px] font-mono mt-0.5 uppercase tracking-widest font-bold ${
+                        isWeekend ? 'text-amber-500/70' : d ? 'text-slate-500' : 'text-slate-400'
+                      }`}>
+                        {isWeekend ? 'Consolidação' : 'Estudo'}
                       </p>
                     </div>
-
-                    <span className={`px-2 py-1 rounded-md text-[10.5px] font-mono font-bold border shrink-0 ${
-                      totalHrs === 0 
-                        ? 'bg-emerald-950/20 text-emerald-400 border-emerald-950' 
-                        : 'bg-slate-900 text-slate-300 border-slate-850'
+                    <span className={`px-2 py-1 rounded-lg text-[10px] font-mono font-bold border shrink-0 ${
+                      totalHrs === 0
+                        ? d ? 'bg-emerald-950/20 text-emerald-400 border-emerald-900/30' : 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                        : d ? 'bg-white/[0.04] text-slate-300 border-white/[0.06]' : 'bg-white text-slate-600 border-slate-200 shadow-sm'
                     }`}>
-                      {totalHrs === 0 ? '✨ Desintoxicação' : `⏱️ ${totalHrs}h`}
+                      {totalHrs === 0 ? '✨ Descanso' : `⏱ ${totalHrs}h`}
                     </span>
                   </div>
 
-                  {/* Body disciplines list */}
-                  <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
+                  {/* Lista de disciplinas */}
+                  <div className="p-3 flex-1 space-y-2.5">
                     {day.disciplines.length === 0 ? (
-                      <div className="py-10 px-4 my-auto bg-slate-900/20 rounded-xl border border-dashed border-slate-850 text-center space-y-2 flex flex-col items-center justify-center">
-                        <span className="text-2xl animate-bounce">🏝️</span>
-                        <h5 className="text-xs font-mono text-emerald-400 font-bold uppercase tracking-widest">Descanso Estratégico</h5>
-                        <p className="text-[10.5px] text-slate-500 leading-normal max-w-[200px] mx-auto">
-                          Sem carga horária declarada para este dia. Aproveite para descansar a mente ou revisar flashcards.
+                      <div className={`py-8 rounded-xl border border-dashed text-center space-y-2 flex flex-col items-center justify-center ${
+                        d ? 'border-slate-800' : 'border-slate-200'
+                      }`}>
+                        <span className="text-xl">🏝️</span>
+                        <p className={`text-[10px] font-bold uppercase tracking-wider ${d ? 'text-emerald-400' : 'text-emerald-600'}`}>Descanso Estratégico</p>
+                        <p className={`text-[10px] leading-normal max-w-[160px] ${d ? 'text-slate-500' : 'text-slate-400'}`}>
+                          Aproveite para revisar flashcards ou descansar.
                         </p>
                       </div>
                     ) : (
-                      <div className="space-y-3.5">
+                      <div className="space-y-2">
                         {day.disciplines.map((disc, subIdx) => (
-                          <div 
+                          <div
                             key={subIdx}
                             onClick={() => setSelectedSlot({
                               day: day.dayOfWeek,
@@ -537,42 +572,32 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
                               topic: disc.topic,
                               justification: getSlotJustification(disc.name, disc.activityType, disc.topic)
                             })}
-                            className="group p-3.5 rounded-xl bg-slate-905 border border-slate-850/80 hover:border-amber-500/40 hover:bg-slate-900 cursor-pointer transition-all space-y-2.5 text-left relative overflow-hidden"
+                            className={`group p-3 rounded-xl border cursor-pointer transition-all space-y-2 text-left relative overflow-hidden ${
+                              d
+                                ? 'bg-white/[0.02] border-white/[0.06] hover:border-indigo-500/30 hover:bg-white/[0.04]'
+                                : 'bg-white border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/30 shadow-sm'
+                            }`}
                             id={`fc-discipline-${dIdx}-${subIdx}`}
                           >
-                            {/* Accent highlight strip */}
-                            <div className={`absolute top-0 bottom-0 left-0 w-[3px] transition-all ${
-                              disc.activityType === 'teoria' ? 'bg-blue-500' :
-                              disc.activityType === 'questões' ? 'bg-yellow-500' :
-                              disc.activityType === 'revisão' ? 'bg-purple-500' :
-                              'bg-red-500'
-                            }`} />
+                            {/* Faixa lateral colorida */}
+                            <div className={`absolute top-0 bottom-0 left-0 w-[3px] ${actStrip(disc.activityType)}`} />
 
-                            <div className="flex justify-between items-start gap-1 pl-1">
-                              <span className="text-xs font-extrabold text-[#ededed] group-hover:text-amber-450 group-hover:text-amber-400 transition-colors truncate">
+                            <div className="flex justify-between items-start gap-2 pl-1.5">
+                              <span className={`text-xs font-bold truncate leading-tight ${d ? 'text-slate-200 group-hover:text-white' : 'text-slate-800 group-hover:text-slate-900'}`}>
                                 {disc.name}
                               </span>
-                              
-                              <span className={`px-1.5 py-0.5 rounded text-[8.5px] font-mono font-bold shrink-0 uppercase tracking-widest ${
-                                disc.activityType === 'teoria' ? 'bg-blue-950/60 text-blue-400 border border-blue-900/30' :
-                                disc.activityType === 'questões' ? 'bg-yellow-950/60 text-yellow-400 border border-yellow-900/30' :
-                                disc.activityType === 'revisão' ? 'bg-purple-950/60 text-purple-400 border border-purple-900/30' :
-                                'bg-red-950/60 text-red-400 border border-red-900/30'
-                              }`}>
-                                {disc.activityType === 'teoria' ? 'Teoria' :
-                                 disc.activityType === 'questões' ? 'Exercicios' :
-                                 disc.activityType === 'revisão' ? 'Revisar' : 'Simulado'}
+                              <span className={`px-1.5 py-0.5 rounded text-[9px] font-mono font-bold shrink-0 uppercase ${actBadge(disc.activityType)}`}>
+                                {actLabel(disc.activityType)}
                               </span>
                             </div>
 
-                            {/* Detailed Topic line: showing directly inside the card to look structured and realistic */}
-                            <p className="text-[11px] text-slate-400 leading-normal pl-1 line-clamp-2">
+                            <p className={`text-[11px] leading-relaxed pl-1.5 line-clamp-2 ${d ? 'text-slate-400' : 'text-slate-500'}`}>
                               {disc.topic}
                             </p>
 
-                            <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 border-t border-slate-900/60 pt-2 pl-1 mt-1">
+                            <div className={`flex items-center justify-between text-[10px] font-mono border-t pt-2 pl-1.5 mt-1 ${d ? 'border-white/[0.04] text-slate-500' : 'border-slate-100 text-slate-400'}`}>
                               <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3 text-slate-500" />
+                                <Clock className="w-3 h-3" />
                                 {disc.duration} min
                               </span>
                               <span className="text-[9.5px] text-slate-500 group-hover:text-amber-400 group-hover:underline flex items-center gap-0.5">
@@ -584,10 +609,10 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
                       </div>
                     )}
 
-                    {/* Bottom Day aggregate info */}
-                    <div className="text-[10px] text-slate-600 font-mono text-center pt-2.5 border-t border-slate-900 flex justify-between items-center sm:px-2">
-                      <span>Ciclo Ativo</span>
-                      <span>{day.disciplines.length} matérias</span>
+                    {/* Rodapé do dia */}
+                    <div className={`text-[10px] font-mono pt-2 border-t flex justify-between items-center ${d ? 'text-slate-600 border-white/[0.04]' : 'text-slate-400 border-slate-100'}`}>
+                      <span>Ciclo ativo</span>
+                      <span>{day.disciplines.length} {day.disciplines.length === 1 ? 'matéria' : 'matérias'}</span>
                     </div>
                   </div>
                 </div>
@@ -595,12 +620,12 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
             })}
           </div>
 
-          <div className="bg-slate-950/60 p-4 rounded-xl border border-slate-850/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-slate-400 leading-normal">
+          <div className={`p-4 rounded-xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs leading-normal ${d ? 'bg-white/[0.02] border-white/[0.06] text-slate-400' : 'bg-indigo-50 border-indigo-100 text-indigo-700'}`}>
             <span className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-              <span>Dica: Clique em qualquer bloco de matéria para ver a <b>justificativa da Athena</b> detalhada para aquela alocação semanal.</span>
+              <CheckCircle2 className={`w-4 h-4 shrink-0 ${d ? 'text-emerald-500' : 'text-indigo-500'}`} />
+              <span>Dica: Clique em qualquer bloco para ver a <b>justificativa da Athena</b> para aquela alocação.</span>
             </span>
-            <span className="text-[10.5px] font-mono text-slate-500 shrink-0">Última recalibração: {schedule.lastRecalibrated || '2026-05-22'}</span>
+            <span className={`text-[10px] font-mono shrink-0 ${d ? 'text-slate-500' : 'text-indigo-500'}`}>Recalibrado: {schedule.lastRecalibrated || '2026-05-22'}</span>
           </div>
         </div>
       )}
@@ -610,22 +635,22 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
         <div className="space-y-4 animate-fade-in text-left text-xs sm:text-xs" id="monthly-view-list">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             {schedule.monthly.map((week) => (
-              <div key={week.weekIndex} className="bg-slate-950 border border-slate-850 p-5 rounded-xl space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-900">
-                  <span className="text-xs font-mono font-bold text-emerald-400">SEMANA {week.weekIndex}</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-yellow-400" />
+              <div key={week.weekIndex} className={`${cardCls} rounded-2xl p-5 space-y-4`}>
+                <div className={`flex items-center justify-between pb-2 border-b ${bdr}`}>
+                  <span className="text-xs font-mono font-bold text-indigo-400">SEMANA {week.weekIndex}</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-bold text-white mb-2">{week.theme}</h4>
-                  <p className="text-xs text-slate-400 leading-relaxed">Ciclo focado em cobrir e consolidar revisões dos tópicos macros de maior incidência no CEBRASPE.</p>
+                  <h4 className={`text-sm font-bold mb-2 ${txt}`}>{week.theme}</h4>
+                  <p className={`text-xs leading-relaxed ${mut}`}>Ciclo focado nos tópicos de maior incidência no CEBRASPE.</p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <span className="text-[10px] font-mono uppercase text-slate-500 font-bold block">Disciplinas em Foco</span>
+                  <span className={`text-[10px] font-mono uppercase font-bold block ${fnt}`}>Disciplinas em Foco</span>
                   <div className="flex flex-wrap gap-1.5">
                     {week.focusDisciplines.map((fd, fIdx) => (
-                      <span key={fIdx} className="bg-slate-900 border border-slate-850 text-slate-300 text-[10px] px-2 py-0.5 rounded-md">
+                      <span key={fIdx} className={`text-[10px] px-2 py-0.5 rounded-lg border font-medium ${d ? 'bg-white/[0.04] border-white/[0.06] text-slate-300' : 'bg-indigo-50 border-indigo-200 text-indigo-700'}`}>
                         {fd}
                       </span>
                     ))}
@@ -906,7 +931,7 @@ export default function Cronograma({ schedule, onboardingData, onUpdateSchedule,
           </div>
         </div>
       )}
-
+      </div>
     </div>
   );
 }

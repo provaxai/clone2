@@ -469,44 +469,52 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, hasAnswered, selectedAnswer, showSessionSummary, isFlipped]);
 
+  const d = theme !== 'light';
+  const txt = d ? 'text-white' : 'text-slate-900';
+  const mut = d ? 'text-slate-400' : 'text-slate-500';
+  const fnt = d ? 'text-slate-500' : 'text-slate-400';
+  const bdr = d ? 'border-white/[0.06]' : 'border-slate-200';
+
   return (
-    <div className={`${theme === 'light' ? 'bg-white border-gray-200' : 'bg-slate-900 border-slate-800'} border rounded-2xl p-6 shadow-xl`} id="train-view-container">
-      {/* 1. Interactive Tabs */}
-      <div className={`border-b ${theme === 'light' ? 'border-gray-200' : 'border-slate-800'} pb-3 mb-6 -mx-2 px-2`}>
-        <div className="flex flex-nowrap sm:flex-wrap gap-2 overflow-x-auto sm:overflow-visible scrollbar-thin scrollbar-thumb-slate-700 snap-x snap-mandatory">
+    <div className={`min-h-full prf-theme ${d ? '' : 'light-theme'} ${d ? 'bg-[#080b14]' : 'bg-slate-50'} font-sans`} id="train-view-container">
+    <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
+
+      {/* Header */}
+      <div>
+        <p className={`text-[11px] font-mono font-bold uppercase tracking-widest ${fnt}`}>Central de Treinamento</p>
+        <h1 className={`text-2xl font-black tracking-tight mt-1 ${txt}`}>Treinar</h1>
+      </div>
+
+      {/* Tabs */}
+      <div className={`${d ? 'bg-[#0d1117] border border-white/[0.06]' : 'bg-white border border-slate-200 shadow-sm'} rounded-2xl p-1.5`}>
+        <div className="flex gap-1 overflow-x-auto scrollbar-none">
           {[
-            { id: 'questoes', label: 'Questões CEBRASPE', shortLabel: 'Questões', icon: <BookOpen className="w-4 h-4" /> },
-            { id: 'revisao', label: 'Revisão Espaçada', shortLabel: 'Revisão', icon: <Layers className="w-4 h-4" /> },
-            { id: 'flashcards', label: 'Flashcards', shortLabel: 'Flashcards', icon: <RefreshCw className="w-4 h-4" /> },
-            { id: 'contran', label: 'Radar CONTRAN', shortLabel: 'Radar CONTRAN', icon: <Shield className="w-4 h-4 text-amber-500 animate-pulse" /> },
-            { id: 'foco', label: 'Modo Foco Pomodoro', shortLabel: 'Pomodoro', icon: <Clock className="w-4 h-4" /> }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as ModeType)}
-              className={`shrink-0 snap-start flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-semibold font-mono transition-colors border whitespace-nowrap ${
-                activeTab === tab.id
-                  ? theme === 'light'
-                    ? 'bg-blue-50 border-blue-600 text-blue-800 shadow-md'
-                    : 'bg-emerald-950/40 border-emerald-500 text-white shadow-md'
-                  : theme === 'light'
-                    ? 'bg-gray-50 border-gray-200 text-gray-600 hover:border-gray-400'
-                    : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
-              }`}
-              id={`tab-${tab.id}`}
-            >
-              {tab.icon}
-              <span className="sm:hidden">{tab.shortLabel}</span>
-              <span className="hidden sm:inline">{tab.label}</span>
-              {tab.id === 'revisao' && urgentRevisaoCount > 0 && (
-                <span className="ml-0.5 bg-red-500 text-white text-[9px] font-black rounded-full min-w-[16px] h-4 flex items-center justify-center px-1 leading-none">
-                  {urgentRevisaoCount}
-                </span>
-              )}
-            </button>
-          ))}
+            { id: 'questoes',   label: 'Questões',  icon: <BookOpen className="w-3.5 h-3.5" /> },
+            { id: 'revisao',    label: 'Revisão',   icon: <Layers className="w-3.5 h-3.5" /> },
+            { id: 'flashcards', label: 'Flashcards',icon: <RefreshCw className="w-3.5 h-3.5" /> },
+            { id: 'contran',    label: 'CONTRAN',   icon: <Shield className="w-3.5 h-3.5 text-amber-400" /> },
+            { id: 'foco',       label: 'Pomodoro',  icon: <Clock className="w-3.5 h-3.5" /> },
+          ].map(tab => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id as ModeType)}
+                className={`shrink-0 flex items-center gap-1.5 py-2 px-3.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                  isActive
+                    ? d ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/40' : 'bg-indigo-50 text-indigo-700 border border-indigo-300'
+                    : d ? 'text-slate-500 hover:text-slate-200 hover:bg-white/[0.04]' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50'
+                }`} id={`tab-${tab.id}`}>
+                {tab.icon} {tab.label}
+                {tab.id === 'revisao' && urgentRevisaoCount > 0 && (
+                  <span className="bg-red-500 text-white text-[9px] font-black rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">{urgentRevisaoCount}</span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
+
+      {/* Conteúdo das abas */}
+      <div className={`${d ? 'bg-[#0d1117] border border-white/[0.06]' : 'bg-white border border-slate-200 shadow-sm'} rounded-2xl p-5`}>
 
       {/* ==================================== TABCONTENT: QUESTÕES ==================================== */}
       {activeTab === 'questoes' && (
@@ -725,35 +733,36 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
                 </p>
               </div>
 
-              {/* Core Choices (Certo/Errado) */}
+              {/* Core Choices (Certo/Errado) — mesmo estilo do Simulados */}
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => handleChooseAnswer('C')}
                   disabled={hasAnswered}
-                  className={`p-4 rounded-xl border font-bold text-center transition-all focus:outline-none ${
+                  className={`py-5 rounded-2xl border font-black text-center transition-all cursor-pointer focus:outline-none ${
                     selectedAnswer === 'C'
-                      ? 'bg-emerald-600 border-emerald-500 text-white ring-2 ring-emerald-400/30 shadow-md'
-                      : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-emerald-700/60 hover:text-emerald-400'
+                      ? 'bg-emerald-500/15 border-emerald-500 text-emerald-400 shadow-lg shadow-emerald-500/10 scale-[1.02]'
+                      : d ? 'bg-[#0d1117] border-white/[0.06] hover:border-white/[0.15] text-slate-300 hover:text-white'
+                          : 'bg-white border-slate-200 hover:border-emerald-300 text-slate-600 hover:text-emerald-700'
                   }`}
                   id="btn-choice-c"
                 >
-                  <span className="block text-xl mb-1">Certo</span>
-                  <span className={`text-[10px] font-mono font-medium ${selectedAnswer === 'C' ? 'text-white/80' : 'text-emerald-600/70'}`}>(Assertiva Verdadeira)</span>
+                  <span className="block text-xl">Certo</span>
+                  <span className="text-[10px] font-mono font-normal opacity-60">(Assertiva Verdadeira)</span>
                 </button>
                 <button
                   onClick={() => handleChooseAnswer('E')}
                   disabled={hasAnswered}
-                  className={`p-4 rounded-xl border font-bold text-center transition-all focus:outline-none ${
+                  className={`py-5 rounded-2xl border font-black text-center transition-all cursor-pointer focus:outline-none ${
                     selectedAnswer === 'E'
-                      ? 'bg-red-600 border-red-500 text-white ring-2 ring-red-400/30 shadow-md'
-                      : 'bg-slate-900 border-slate-700 text-slate-300 hover:border-red-700/60 hover:text-red-400'
+                      ? 'bg-red-500/15 border-red-500 text-red-400 shadow-lg shadow-red-500/10 scale-[1.02]'
+                      : d ? 'bg-[#0d1117] border-white/[0.06] hover:border-white/[0.15] text-slate-300 hover:text-white'
+                          : 'bg-white border-slate-200 hover:border-red-300 text-slate-600 hover:text-red-600'
                   }`}
                   id="btn-choice-e"
                 >
-                  <span className="block text-xl mb-1">Errado</span>
-                  <span className={`text-[10px] font-mono font-medium ${selectedAnswer === 'E' ? 'text-white/80' : 'text-rose-600/70'}`}>(Assertiva Falsa)</span>
+                  <span className="block text-xl">Errado</span>
+                  <span className="text-[10px] font-mono font-normal opacity-60">(Assertiva Falsa)</span>
                 </button>
-
               </div>
 
               {/* Keyboard shortcuts hint */}
@@ -1347,7 +1356,7 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
             <div className="text-xs font-mono text-slate-400 flex items-center gap-2">
               <span>Deck de Memorização • Ativo: <b className="text-emerald-400">{fcIndex + 1}/{flashcardDeck.length}</b></span>
             </div>
-            <button 
+            <button
               onClick={handleGenerateAiFlashcard}
               disabled={generatingCard}
               className="flex items-center gap-1 bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 py-1.5 px-3.5 rounded-lg text-xs font-bold hover:scale-[1.01] transition-transform shadow disabled:opacity-40"
@@ -1361,24 +1370,21 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
           {activeCard ? (
             <div className="flex flex-col items-center justify-center max-w-lg mx-auto" id="flashcard-deck-box">
               {/* Card Container */}
-              <div 
+              <div
                 onClick={() => setIsFlipped(!isFlipped)}
                 className={`w-full min-h-[220px] bg-slate-950 border rounded-2xl cursor-pointer shadow-lg p-6 flex flex-col justify-between transition-all duration-300 relative select-none ${
-                  isFlipped 
-                    ? 'border-emerald-500 ring-1 ring-emerald-500/30 shadow-emerald-500/10 shadow-xl' 
+                  isFlipped
+                    ? 'border-emerald-500 ring-1 ring-emerald-500/30 shadow-emerald-500/10 shadow-xl'
                     : 'border-slate-800 hover:border-slate-700/80'
                 }`}
                 id="interactive-fc-card"
               >
-                {/* Category label indicator */}
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-mono uppercase bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-slate-400 font-bold">
                     {activeCard.category}
                   </span>
                   <span className="text-[9px] font-mono text-slate-500 font-semibold uppercase">{isFlipped ? 'Resposta' : 'Pergunta'}</span>
                 </div>
-
-                {/* Central sentence */}
                 <div className="text-center py-6">
                   {isFlipped ? (
                     <p className="text-slate-100 font-medium text-sm sm:text-base leading-relaxed font-sans">{activeCard.answer}</p>
@@ -1386,8 +1392,6 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
                     <p className="text-white font-extrabold text-sm sm:text-lg leading-snug font-sans">{activeCard.question}</p>
                   )}
                 </div>
-
-                {/* Footer advice */}
                 <span className="text-center text-[10px] text-slate-600 font-mono tracking-wide uppercase font-semibold">
                   {isFlipped ? 'Clique para ver a Pergunta' : 'Clique para Revelar a Resposta'}
                 </span>
@@ -1397,16 +1401,15 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
                 {!isFlipped ? 'Space / Enter — Revelar' : '← Esqueci     → Lembrei'}
               </div>
 
-              {/* Action buttons (only displayed once card is flipped over) */}
               {isFlipped && (
                 <div className="flex justify-center gap-4 mt-6 w-full animate-fade-in" id="fc-controls">
-                  <button 
+                  <button
                     onClick={() => handleCardFeedback(false)}
                     className="flex-1 py-3 px-4 rounded-xl border border-red-900/40 bg-red-950/20 text-red-500 hover:bg-red-950/40 font-bold font-mono text-xs transition-colors"
                   >
                     Eu esqueci
                   </button>
-                  <button 
+                  <button
                     onClick={() => handleCardFeedback(true)}
                     className="flex-1 py-3 px-4 rounded-xl border border-emerald-900/40 bg-emerald-950/20 text-emerald-500 hover:bg-emerald-950/40 font-bold font-mono text-xs transition-colors"
                   >
@@ -1541,6 +1544,8 @@ export default function Treinar({ selectedTaskToTrain, onQuestionAnswered, onFoc
       {activeTab === 'contran' && (
         <RadarContran />
       )}
+      </div>{/* fim conteúdo abas */}
+      </div>{/* fim max-w container */}
     </div>
   );
 }
