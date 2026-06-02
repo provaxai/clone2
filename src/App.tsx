@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useAuth } from './hooks/useAuth';
+import AuthPage from './components/AuthPage';
+import { supabase } from './lib/supabase';
 import { UserOnboarding, StudySchedule, ProgressData, StudyTask, DailyMission, LibraryItem, Message, DaySchedule, TaskType, EditalTopic } from './types';
 import Onboarding from './components/Onboarding';
 import StreakWidget from './components/StreakWidget';
@@ -29,6 +32,9 @@ import {
 } from 'lucide-react';
 
 export default function App() {
+  // ── Autenticação Supabase ──────────────────────────────────
+  const { user, loading: authLoading, initialized } = useAuth();
+
   // Theme state choice: 'dark' | 'light'
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     if (typeof localStorage === 'undefined') return 'dark';
@@ -846,12 +852,48 @@ export default function App() {
   };
 
   // If user hasn't completed onboarding wizard yet, enforce it
+  // ── Loading inicial do auth ──────────────────────────────
+  if (!initialized || authLoading) {
+    return (
+      <div className="min-h-screen bg-[#080b14] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/20 flex items-center justify-center text-2xl animate-pulse">🦉</div>
+          <p className="text-sm text-slate-400 font-mono">Carregando ProvaX AI...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Não autenticado → Tela de auth ───────────────────────
+  if (!user) {
+    if (!inOnboardingFlow) {
+      return (
+        <LandingPage
+          onStartOnboarding={() => setInOnboardingFlow(true)}
+          onLoginDirectly={() => {
+            // Redireciona para login ao clicar em "Entrar"
+            setInOnboardingFlow(true);
+          }}
+        />
+      );
+    }
+    // Mostra tela de login/cadastro
+    return (
+      <AuthPage
+        theme={theme}
+        onAuth={() => {
+          setInOnboardingFlow(false);
+        }}
+      />
+    );
+  }
+
   if (!onboarding) {
     if (!inOnboardingFlow) {
       return (
-        <LandingPage 
-          onStartOnboarding={() => setInOnboardingFlow(true)} 
-          onLoginDirectly={handleLoginDirectly} 
+        <LandingPage
+          onStartOnboarding={() => setInOnboardingFlow(true)}
+          onLoginDirectly={handleLoginDirectly}
         />
       );
     }
@@ -891,7 +933,10 @@ export default function App() {
     <AppShell
       currentTab={currentTab}
       onTabChange={(tab) => { setCurrentTab(tab); playClickSound(); }}
-      onLogout={() => setOnboarding(null)}
+      onLogout={async () => {
+        await supabase.auth.signOut();
+        setOnboarding(null);
+      }}
       theme={theme}
       onToggleTheme={toggleTheme}
       userName={onboarding?.name || 'Recruta'}
