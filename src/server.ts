@@ -21,7 +21,40 @@ async function getServerEntry(): Promise<ServerEntry> {
 function brandedErrorResponse(): Response {
   return new Response(renderErrorPage(), {
     status: 500,
-    headers: { "content-type": "text/html; charset=utf-8" },
+    headers: {
+      "content-type": "text/html; charset=utf-8",
+      "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0",
+      pragma: "no-cache",
+      expires: "0",
+      "surrogate-control": "no-store",
+    },
+  });
+}
+
+function isHtmlNavigation(request: Request, response: Response): boolean {
+  const accept = request.headers.get("accept") ?? "";
+  const contentType = response.headers.get("content-type") ?? "";
+
+  return accept.includes("text/html") || contentType.includes("text/html");
+}
+
+function withNoStoreForHtml(request: Request, response: Response): Response {
+  if (request.method !== "GET" && request.method !== "HEAD") return response;
+  if (!isHtmlNavigation(request, response)) return response;
+
+  const headers = new Headers(response.headers);
+  headers.set(
+    "cache-control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0, s-maxage=0",
+  );
+  headers.set("pragma", "no-cache");
+  headers.set("expires", "0");
+  headers.set("surrogate-control", "no-store");
+
+  return new Response(request.method === "HEAD" ? null : response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
   });
 }
 
@@ -71,7 +104,8 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalizedResponse = await normalizeCatastrophicSsrResponse(response);
+      return withNoStoreForHtml(request, normalizedResponse);
     } catch (error) {
       console.error(error);
       return brandedErrorResponse();
