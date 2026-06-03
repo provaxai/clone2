@@ -341,7 +341,7 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
           <span className="text-xs font-mono uppercase text-amber-500 tracking-wider font-extrabold block mb-2">EDUCATIONAL INTELLIGENCE</span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight max-w-3xl mx-auto leading-tight">
             Cursinhos tradicionais te dão 1.500 videoaulas. <br className="hidden sm:inline" />
-            Nós te damos a <span className="text-amber-500">aprovação</span>.
+            Nós te damos uma <span className="text-amber-500">rota personalizada para a sua aprovação.</span>
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-3 max-w-xl mx-auto leading-relaxed">
             Plataformas de estudos antigas tratam todos os vestibulandos ou concurseiros da mesma forma. A Athena customiza cada minuto do seu dia para eficiência total.
