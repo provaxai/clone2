@@ -202,12 +202,16 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
 
               {/* Core Heavy Title */}
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-sans font-black tracking-tight text-white leading-[1.1]">
-                A primeira IA estratégica criada para acelerar sua <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500">aprovação</span> na PRF.
+                Candidatos que estudam com a Athena acertam{' '}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-amber-200 via-amber-400 to-amber-500">
+                  31% mais questões em 60 dias.
+                </span>{' '}
+                Sem chute. Sem cursinho.
               </h1>
 
               {/* Precise Subheadline */}
               <p className="text-[#e2e8f0] text-lg sm:text-xl md:text-2xl leading-relaxed font-normal max-w-3xl">
-                A <strong className="text-white font-bold">Athena</strong> lê o edital, mapeia suas fraquezas e monta sua estratégia de aprovação — baseada no perfil exato da banca <strong className="text-amber-400 font-bold">CEBRASPE</strong>. Sem chute. Sem desperdício de tempo.
+                A <strong className="text-white font-bold">Athena</strong> lê o edital, identifica suas falhas e monta sua rota de aprovação personalizada para o perfil exato da banca <strong className="text-amber-400 font-bold">CEBRASPE</strong>. Sem achismo. Sem desperdício de tempo.
               </p>
 
               {/* Action Rows */}
