@@ -212,22 +212,22 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
               </p>
 
               {/* Action Rows */}
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5 w-full sm:w-auto pt-4">
-                <button 
+              <div className="flex flex-col items-start gap-4 pt-4">
+                <button
                   onClick={onStartOnboarding}
                   className="px-10 py-5 text-base sm:text-lg font-extrabold text-slate-950 bg-amber-400 hover:bg-amber-300 rounded-xl flex items-center justify-center gap-3 hover:scale-[1.02] shadow-xl shadow-amber-500/20 active:scale-[0.98] transition-all cursor-pointer"
                 >
                   <span>Experimentar Grátis</span>
                   <ArrowRight className="w-5 h-5 text-slate-950 stroke-[2.5]" />
                 </button>
-                
+
                 <a
                   href="#playground"
                   onClick={(e) => handleScrollToSection(e, 'playground')}
-                  className="px-8 py-5 text-base font-bold text-slate-200 border border-white/[0.12] bg-white/[0.03] hover:bg-white/[0.08] hover:text-white rounded-xl text-center shadow-lg transition-all flex items-center justify-center gap-3"
+                  className="text-sm text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1.5 cursor-pointer group"
                 >
-                  <PlayCircle className="w-5 h-5 text-amber-400" />
-                  Ver Inteligência em Ação
+                  Ver como funciona na prática
+                  <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
                 </a>
               </div>
 
