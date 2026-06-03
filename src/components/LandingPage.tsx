@@ -839,7 +839,7 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Database, title: "Mapeamento Completo PRF", desc: "Varredura do edital focado na banca CEBRASPE, cobrindo Código de Trânsito, resoluções exclusivas e leis secas." },
+              { icon: Database, title: "Hackeia o Padrão da Banca", desc: "A Athena cruza 12 anos de provas CEBRASPE e identifica o que mais cai — e o que nunca cai. Você estuda o que vale ponto, não o que enche apostila." },
               { icon: Calendar, title: "Cronograma IA Adaptativo", desc: "Gerado e recalculado dinamicamente toda semana com base na sua rotina e na calibragem de erros." },
               { icon: Zap, title: "Missão do Dia Calibrada", desc: "Sua folha de rotas diária contendo tarefas adaptativas de estudo ativo com impacto real previsto." },
               { icon: Layers, title: "Repetição Espaçada Inteligente", desc: "Resgate ativo de conceitos memorizados antes da curva natural de esquecimento te fazer recomeçar." },
