@@ -84,12 +84,9 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
 
         {/* PRE-HEADER ALERT */}
         <div className="bg-gradient-to-r from-amber-600/30 via-slate-900 to-amber-600/30 text-slate-300 px-4 py-2 text-center text-xs tracking-wider flex items-center justify-center gap-2 border-b border-white/[0.04]">
-          <span className="flex h-2 w-2 relative shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
-          </span>
-          <span className="font-mono text-xs sm:text-sm">
-            EDITAL PRF EM BREVE: <strong className="text-amber-400">Athena AI</strong> já mapeou todos os conteúdos — sua estratégia começa agora.
+          <span className="text-base shrink-0">🚨</span>
+          <span className="font-mono text-xs sm:text-sm leading-snug">
+            Novo concurso PRF com edital previsto para o <strong className="text-amber-400">2º semestre de 2026</strong> — a Athena já mapeou todo o conteúdo. <strong className="text-white">Quem começa agora chega na prova com meses de vantagem.</strong>
           </span>
         </div>
 
