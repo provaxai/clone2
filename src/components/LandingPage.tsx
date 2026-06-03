@@ -5,7 +5,7 @@ import {
   MessageSquare, Compass, Star, Award, BookOpen, Clock, Calendar, Layers,
   Sparkles, ListTodo, HelpCircle, Flame, CreditCard, ChevronRight, Menu, X,
   Sliders, TrendingUp, Scale, AlertTriangle, GraduationCap, ChevronDown, CheckSquare,
-  Upload, FileText, Database, UserCheck, Zap, RefreshCw, BarChart3, ArrowRightLeft,
+  Upload, FileText, Database, UserCheck, Zap, RefreshCw, BarChart3, ArrowRightLeft, Target,
   PlayCircle, Bookmark, Quote
 } from 'lucide-react';
 import Logo from './Logo';
@@ -281,6 +281,56 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
             </div>
 
           </div>
+        </div>
+      </section>
+
+      {/* 3.5 INTELIGÊNCIA DE BANCA */}
+      <section className="py-20 sm:py-28 bg-[#080d19] border-b border-white/[0.03]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+          <span className="text-xs font-mono uppercase text-amber-500 tracking-wider font-extrabold block mb-2">INTELIGÊNCIA DE BANCA</span>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight max-w-3xl mx-auto leading-tight">
+            Como a Athena conhece a <span className="text-amber-500">CEBRASPE</span> melhor que qualquer cursinho
+          </h2>
+          <p className="text-slate-400 text-sm mt-4 max-w-xl mx-auto leading-relaxed">
+            Não é conteúdo genérico. É a banca CEBRASPE analisada questão por questão — para você acertar mais com menos tempo.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-14">
+            {/* Card 1 */}
+            <div className="p-6 bg-white/[0.01] border border-white/[0.05] rounded-2xl hover:border-amber-500/30 hover:bg-white/[0.02] transition-all text-left space-y-4">
+              <div className="p-2.5 bg-amber-500/5 rounded-lg w-max border border-amber-500/10">
+                <Shield className="w-5 h-5 text-amber-500" />
+              </div>
+              <strong className="block text-base font-black text-white">Padrão Histórico Decifrado</strong>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Analisamos todas as provas da CEBRASPE dos últimos 10 anos e mapeamos exatamente como ela cobra, onde ela engana e quais tópicos ela repete edital após edital.
+              </p>
+            </div>
+
+            {/* Card 2 */}
+            <div className="p-6 bg-white/[0.01] border border-white/[0.05] rounded-2xl hover:border-amber-500/30 hover:bg-white/[0.02] transition-all text-left space-y-4">
+              <div className="p-2.5 bg-amber-500/5 rounded-lg w-max border border-amber-500/10">
+                <Target className="w-5 h-5 text-amber-500" />
+              </div>
+              <strong className="block text-base font-black text-white">Foco no Que Realmente Cai</strong>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                Nada de estudar 100% do edital às cegas. A Athena prioriza os tópicos de maior incidência e maior peso na sua nota final — eliminando o que não vai aparecer na prova.
+              </p>
+            </div>
+
+            {/* Card 3 */}
+            <div className="p-6 bg-white/[0.01] border border-white/[0.05] rounded-2xl hover:border-amber-500/30 hover:bg-white/[0.02] transition-all text-left space-y-4">
+              <div className="p-2.5 bg-amber-500/5 rounded-lg w-max border border-amber-500/10">
+                <Zap className="w-5 h-5 text-amber-500" />
+              </div>
+              <strong className="block text-base font-black text-white">Pegadinhas da Banca Identificadas</strong>
+              <p className="text-sm text-slate-400 leading-relaxed">
+                As armadilhas da CEBRASPE têm padrão. A Athena te treina para reconhecê-las antes de cair nelas — e transforma seu ponto fraco em vantagem competitiva.
+              </p>
+            </div>
+          </div>
+
         </div>
       </section>
 
