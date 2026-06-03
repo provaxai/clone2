@@ -81,12 +81,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "ProvaX AI | Aprovação PRF" },
       { property: "og:description", content: "Plataforma de estudos com IA estratégica para candidatos da PRF." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@ProvaXAI" },
-      { name: "twitter:title", content: "ProvaX AI | Aprovação PRF" },
-      { name: "twitter:description", content: "Plataforma de estudos com IA estratégica para candidatos da PRF." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3e41ba21-fec0-432a-ac8a-d67213bd274e/id-preview-665b479c--d7867d37-58e4-44d7-9565-2a6c36896a0c.lovable.app-1779943337164.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/3e41ba21-fec0-432a-ac8a-d67213bd274e/id-preview-665b479c--d7867d37-58e4-44d7-9565-2a6c36896a0c.lovable.app-1779943337164.png" },
+      { name: "twitter:title", content: "ProvaX AI | Aprovação PRF com IA" },
+      { name: "twitter:description", content: "Candidatos que estudam com a Athena acertam 31% mais questões em 60 dias. IA estratégica para candidatos da PRF." },
+      { property: "og:image", content: "https://provaxai.com.br/og-image.png" },
+      { name: "twitter:image", content: "https://provaxai.com.br/og-image.png" },
     ],
     links: [
       {

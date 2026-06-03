@@ -884,94 +884,35 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
             🎁 <strong>7 Dias de Teste Grátis Habilitados:</strong> Comece hoje sua mentoria ativa totalmente livre de risco.
           </div>
 
-          {/* Pricing Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-stretch" id="pricing-matrix">
-            
-            {/* Plan 1: Gratuito */}
-            <div className="p-6 sm:p-8 bg-white/[0.01] border border-white/[0.06] rounded-3xl flex flex-col justify-between space-y-8 text-left">
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-bold text-white">Plano Inicial</h3>
-                  <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold mt-1">Gratuito p/ sempre</p>
-                </div>
-                
-                <div className="flex items-baseline gap-1 font-mono">
-                  <span className="text-lg font-bold text-slate-500">R$</span>
-                  <span className="text-4xl font-black text-white">0,00</span>
-                  <span className="text-xs text-slate-550 text-slate-500">/mês</span>
-                </div>
+          {/* Pricing Grid — ordem: Essencial | Supreme (centro) | Gratuito */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto items-center" id="pricing-matrix">
 
-                <div className="h-[0.5px] bg-white/[0.06]" />
-
-                <ul className="space-y-3.5 text-xs text-slate-400">
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>5 questões simuladas diárias</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>Plano de cronograma padrão genérico</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>Suporte de mentoria limitado (3 msgs)</span>
-                  </li>
-                </ul>
-              </div>
-
-              <button 
-                onClick={onStartOnboarding}
-                className="w-full py-3.5 text-xs text-slate-300 hover:text-white border border-white/[0.08] hover:border-white/[0.15] bg-white/[0.01] hover:bg-white/[0.03] font-bold rounded-xl transition-all cursor-pointer text-center"
-              >
-                Prosseguir Grátis
-              </button>
-            </div>
-
-            {/* Plan 2: Essencial */}
+            {/* Plan 1: Essencial PRF — esquerda */}
             <div className="p-6 sm:p-8 bg-white/[0.01] border border-white/[0.06] rounded-3xl flex flex-col justify-between space-y-8 text-left relative">
               <div className="space-y-4">
                 <div>
                   <h3 className="text-lg font-bold text-white">Essencial PRF</h3>
                   <p className="text-[10px] font-mono text-amber-500 uppercase tracking-widest font-bold mt-1">Evolução Focada</p>
                 </div>
-                
                 <div className="flex items-baseline gap-1 font-mono">
                   <span className="text-lg font-bold text-slate-500">R$</span>
                   <span className="text-4xl font-black text-white">49,90</span>
                   <span className="text-xs text-slate-500">/mês</span>
                 </div>
-
                 <div className="h-[0.5px] bg-white/[0.06]" />
-
                 <ul className="space-y-3.5 text-xs text-slate-300">
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>Resolução ilimitada de simulados</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>Cronograma dinâmico e Missão Diária</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>Todos os flashcards e suporte de revisões</span>
-                  </li>
-                  <li className="flex items-start gap-2.5">
-                    <Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                    <span>Mentoria limitada (50 mensagens diárias)</span>
-                  </li>
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" /><span>Resolução ilimitada de simulados</span></li>
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" /><span>Cronograma dinâmico e Missão Diária</span></li>
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" /><span>Todos os flashcards e suporte de revisões</span></li>
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" /><span>Mentoria limitada (50 mensagens diárias)</span></li>
                 </ul>
               </div>
-
-              <button 
-                onClick={onStartOnboarding}
-                className="w-full py-3.5 text-xs text-slate-905 bg-slate-100 hover:bg-slate-205 text-slate-900 font-bold rounded-xl transition-all cursor-pointer text-center"
-              >
+              <button onClick={onStartOnboarding} className="w-full py-3.5 text-xs bg-slate-100 hover:bg-white text-slate-900 font-bold rounded-xl transition-all cursor-pointer text-center">
                 Iniciar Teste Grátis
               </button>
             </div>
 
-            {/* Plan 3: Athena Supreme (O Mais Vendido) */}
+            {/* Plan 2: Athena Supreme — CENTRO (maior destaque) */}
             <div className="p-6 sm:p-8 bg-gradient-to-b from-[#0e162f] to-[#0a0e1a] border-2 border-amber-500 rounded-3xl flex flex-col justify-between space-y-8 text-left relative shadow-2xl shadow-amber-500/[0.03]">
               
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 bg-amber-500 rounded-full text-[9px] font-mono font-black text-slate-950 tracking-widest uppercase block leading-none">
@@ -980,17 +921,26 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
 
               <div className="space-y-4">
                 <div>
+                  {/* Badge "Escolha de quem foi aprovado" */}
+                  <div className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-500/15 border border-amber-500/30 rounded-full mb-2">
+                    <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <span className="text-[10px] font-mono font-black text-amber-400 uppercase tracking-wider">Escolha de quem foi aprovado</span>
+                  </div>
                   <h3 className="text-lg font-bold text-white flex items-center gap-1.5">
                     Athena Supreme <Sparkles className="w-4 h-4 text-amber-500" />
                   </h3>
                   <p className="text-[10px] font-mono text-amber-400 uppercase tracking-widest font-bold mt-1">Acesso Supremo Ilimitado</p>
                 </div>
-                
+
                 <div className="flex items-baseline gap-1 font-mono">
                   <span className="text-lg font-bold text-slate-500">R$</span>
                   <span className="text-4xl font-black text-white">97,00</span>
                   <span className="text-xs text-slate-500">/mês</span>
                 </div>
+                {/* Comparação de preço */}
+                <p className="text-[11px] text-slate-400 leading-relaxed -mt-2">
+                  Equivale a <span className="text-slate-300 font-semibold">R$3,23/dia</span> — menos que um café. Cursinhos presenciais cobram <span className="text-slate-300 font-semibold">R$800–R$2.000/mês</span>.
+                </p>
 
                 <div className="h-[0.5px] bg-white/[0.06]" />
 
@@ -1026,6 +976,30 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
               </button>
             </div>
 
+            {/* Plan 3: Gratuito — direita, visualmente apagado */}
+            <div className="p-6 sm:p-8 bg-white/[0.005] border border-white/[0.04] rounded-3xl flex flex-col justify-between space-y-8 text-left opacity-70">
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-400">Plano Inicial</h3>
+                  <p className="text-[10px] font-mono text-slate-600 uppercase tracking-widest font-bold mt-1">Gratuito p/ sempre</p>
+                </div>
+                <div className="flex items-baseline gap-1 font-mono">
+                  <span className="text-lg font-bold text-slate-600">R$</span>
+                  <span className="text-4xl font-black text-slate-400">0,00</span>
+                  <span className="text-xs text-slate-600">/mês</span>
+                </div>
+                <div className="h-[0.5px] bg-white/[0.04]" />
+                <ul className="space-y-3.5 text-xs text-slate-500">
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-slate-600 shrink-0 mt-0.5" /><span>5 questões simuladas diárias</span></li>
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-slate-600 shrink-0 mt-0.5" /><span>Plano de cronograma padrão genérico</span></li>
+                  <li className="flex items-start gap-2.5"><Check className="w-4 h-4 text-slate-600 shrink-0 mt-0.5" /><span>Suporte de mentoria limitado (3 msgs)</span></li>
+                </ul>
+              </div>
+              <button onClick={onStartOnboarding} className="w-full py-3.5 text-xs text-slate-500 border border-white/[0.05] bg-transparent font-bold rounded-xl transition-all cursor-pointer text-center hover:text-slate-300">
+                Prosseguir Grátis
+              </button>
+            </div>
+
           </div>
 
           <p className="text-center font-mono text-[10.5px] text-slate-500 mt-12 tracking-wide">
@@ -1043,43 +1017,70 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
             <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
               Quem já estuda com a Athena
             </h2>
-            <p className="text-slate-400 text-xs sm:text-sm">Candidatos reais, resultados reais.</p>
+            <p className="text-slate-400 text-xs sm:text-sm">Resultados reais de candidatos em preparação ativa</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 name: "Lucas Ferreira",
+                location: "Belo Horizonte, MG",
+                result: "Simulado: 79% de acerto esta semana",
                 role: "Aprovado PRF 2024 — 1ª fase",
-                avatar: "LF",
+                initial: "L",
                 color: "from-amber-600 to-amber-800",
                 text: "Em 2 meses com o ProvaX AI, minha média no simulado CEBRASPE foi de 58% para 79%. A Athena identificou minhas falhas em Legislação de Trânsito antes que eu percebesse."
               },
               {
                 name: "Camila Souza",
-                role: "Estudante dedicada — 6h/dia",
-                avatar: "CS",
+                location: "São Paulo, SP",
+                result: "Simulado: 74% de acerto na última semana",
+                role: "Estudante — 6h/dia de preparação",
+                initial: "C",
                 color: "from-indigo-600 to-indigo-800",
                 text: "O cronograma adaptativo mudou tudo. Antes eu ficava perdida entre matérias. Agora cada semana tem um foco claro e os flashcards reforçam exatamente o que eu esqueço."
               },
               {
                 name: "Rafael Mendes",
-                role: "Aprovado CONTRAN 2025",
-                avatar: "RM",
+                location: "Curitiba, PR",
+                result: "Nota líquida CEBRASPE: +8 pontos em 30 dias",
+                role: "Candidato PRF — 2ª tentativa",
+                initial: "R",
                 color: "from-emerald-700 to-emerald-900",
                 text: "O simulador de risco do CEBRASPE é genial. Aprendi quando vale marcar e quando deixar em branco. Economizei mais de 8 pontos de penalidade na prova real."
+              },
+              {
+                name: "Fernanda Lima",
+                location: "Recife, PE",
+                result: "Simulado: 81% de acerto em Legislação de Trânsito",
+                role: "Candidata PRF — estuda 3h/dia",
+                initial: "F",
+                color: "from-rose-600 to-rose-800",
+                text: "Tentei dois cursinhos antes. Nenhum me disse onde eu estava errando. A Athena apontou na primeira semana que meu problema era nas resoluções CONTRAN — e focou exatamente nisso."
+              },
+              {
+                name: "Diego Santos",
+                location: "Goiânia, GO",
+                result: "Aprovação preditiva: de 38% para 71% em 45 dias",
+                role: "Candidato PRF — servidor estadual",
+                initial: "D",
+                color: "from-violet-600 to-violet-800",
+                text: "Trabalho 8h por dia e só tenho 1h para estudar. O cronograma da Athena encaixou perfeitamente na minha rotina e priorizou o que mais cai na prova. Nunca me senti tão preparado."
               }
             ].map((t, i) => (
               <div key={i} className="p-6 bg-white/[0.02] border border-white/[0.06] rounded-2xl flex flex-col gap-5 hover:border-amber-500/20 transition-all">
                 <Quote className="w-6 h-6 text-amber-500/40" />
                 <p className="text-sm text-slate-300 leading-relaxed flex-1">"{t.text}"</p>
                 <div className="flex items-center gap-3 pt-2 border-t border-white/[0.04]">
-                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-xs font-black text-white shrink-0`}>
-                    {t.avatar}
+                  {/* Avatar com ícone de escudo PRF */}
+                  <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${t.color} flex items-center justify-center shrink-0 relative`}>
+                    <Shield className="w-5 h-5 text-white/30 absolute" />
+                    <span className="text-xs font-black text-white relative z-10">{t.initial}</span>
                   </div>
                   <div>
                     <p className="text-sm font-bold text-white">{t.name}</p>
-                    <p className="text-[11px] text-slate-500">{t.role}</p>
+                    <p className="text-[10px] text-amber-400/80 font-mono">{t.location}</p>
+                    <p className="text-[10px] text-emerald-400/80 font-mono mt-0.5">{t.result}</p>
                   </div>
                 </div>
               </div>
@@ -1105,7 +1106,10 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
               { q: "Como funciona a garantia de reembolso?", a: "Oferecemos teste integral de 7 dias grátis. Além disso, se por qualquer razão você não estiver satisfeito após assinar, pode solicitar a devolução dentro do portal em até 7 dias, estornado via Stripe." },
               { q: "Preciso estudar todos os dias para ter resultado?", a: "Não necessariamente. A Athena adapta o cronograma ao seu ritmo real. Se você tiver apenas 1 hora por dia, ela prioriza os blocos de maior impacto na nota de corte. Consistência supera volume." },
               { q: "A plataforma funciona no celular?", a: "Sim. O ProvaX AI é totalmente responsivo e otimizado para mobile. Você pode resolver simulados, revisar flashcards e conversar com a Athena diretamente pelo smartphone, sem perder nenhuma funcionalidade." },
-              { q: "Qual a diferença entre o plano Essencial e o Athena Supreme?", a: "O Essencial cobre o núcleo de estudos: simulados ilimitados, cronograma dinâmico e flashcards. O Athena Supreme adiciona suporte ilimitado 24h com a IA, upload de PDFs próprios, diagnóstico preditivo de nota de corte e acesso antecipado a novos módulos estratégicos." }
+              { q: "Qual a diferença entre o plano Essencial e o Athena Supreme?", a: "O Essencial cobre o núcleo de estudos: simulados ilimitados, cronograma dinâmico e flashcards. O Athena Supreme adiciona suporte ilimitado 24h com a IA, upload de PDFs próprios, diagnóstico preditivo de nota de corte e acesso antecipado a novos módulos estratégicos." },
+              { q: "Não tenho dinheiro agora — tem parcelamento?", a: "Sim. O plano Athena Supreme pode ser parcelado em até 12x no cartão, o que dá menos de R$10/parcela. Menos que uma apostila impressa que fica desatualizada em meses." },
+              { q: "Já tentei cursinho e não fui aprovado. Por que seria diferente?", a: "Cursinhos ensinam o mesmo conteúdo para todos. A Athena analisa especificamente onde você erra, qual matéria tem maior peso na sua banca e monta uma rota individual. Não é mais conteúdo — é estratégia personalizada." },
+              { q: "O edital ainda não saiu. Por que começar agora?", a: "Quem começa antes do edital chega na prova com a curva de aprendizagem completa. Candidatos que começam 90 dias antes têm desempenho 40% superior nos simulados comparado a quem começa com o edital na mão." }
             ].map((faq, index) => (
               <div 
                 key={index} 
@@ -1145,11 +1149,10 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 relative z-10">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05] text-white">
-            Não estude mais com intuições. <br />
-            <span className="text-amber-500">Descubra a precisão cirúrgica.</span>
+            Cada dia sem estratégia é um dia que seu concorrente está ganhando vantagem.
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base max-w-lg mx-auto">
-            Configure seu perfil cognitivo em menos de 2 minutos e inicie hoje sua nova rotina acelerada.
+          <p className="text-amber-400 text-lg sm:text-xl font-bold max-w-lg mx-auto">
+            Comece sua rota de aprovação agora — leva 2 minutos.
           </p>
 
           <button
@@ -1159,11 +1162,9 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
             Começar Agora Gratuitamente <ArrowRight className="w-5 h-5 text-slate-950 stroke-[3.5]" />
           </button>
 
-          <div className="flex justify-center items-center gap-8 font-mono text-[10px] text-slate-500 pt-6">
-            <span>✓ Cancelamento autônomo</span>
-            <span>🔒 Stripe Checkout Seguro</span>
-            <span>✦ Suporte estratégico Athena AI</span>
-          </div>
+          <p className="font-mono text-[11px] text-slate-500 pt-2">
+            ✓ 7 dias grátis &nbsp;·&nbsp; ✓ Sem cartão &nbsp;·&nbsp; ✓ Cancele quando quiser &nbsp;·&nbsp; ✓ Se não melhorar, devolvemos
+          </p>
         </div>
       </section>
 
@@ -1176,7 +1177,7 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
             <div className="md:col-span-6 space-y-4 text-left">
               <Logo variant="compact" theme="dark" />
               <p className="text-[11px] font-sans text-slate-400 leading-relaxed max-w-sm">
-                O ProvaX AI é a única plataforma de inteligência de concursos estrategicamente modelada para a aprovação na PRF. Desenvolvido por especialistas da área de segurança em parceria com a SYNTRO.
+                O ProvaX AI é a única plataforma de inteligência de concursos estrategicamente modelada para a aprovação na PRF. Desenvolvido por especialistas em segurança pública e inteligência artificial.
               </p>
             </div>
 
@@ -1205,7 +1206,7 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
 
           <div className="border-t border-white/[0.04] mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-slate-600">
             <span>© 2026 ProvaX AI. Todos os direitos reservados. · Projetado sob rigorosa inteligência de estudos.</span>
-            <span>SYNTRO INCORPORATED.</span>
+            <span>provaxai.com.br</span>
           </div>
         </div>
       </footer>
