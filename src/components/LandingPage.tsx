@@ -208,7 +208,7 @@ export default function LandingPage({ onStartOnboarding, onLoginDirectly }: Land
 
               {/* Precise Subheadline */}
               <p className="text-[#e2e8f0] text-lg sm:text-xl md:text-2xl leading-relaxed font-normal max-w-3xl">
-                A <strong className="text-white font-bold">Athena</strong> lê o edital, identifica suas falhas e monta sua rota de aprovação personalizada para o perfil exato da banca <strong className="text-amber-400 font-bold">CEBRASPE</strong>. Sem achismo. Sem desperdício de tempo.
+                A <strong className="text-white font-bold">Athena</strong> lê o edital, decifra os padrões e as pegadinhas da banca <strong className="text-amber-400 font-bold">CEBRASPE</strong>, identifica suas falhas e monta sua rota de aprovação personalizada. Sem achismo. Sem desperdício de tempo.
               </p>
 
               {/* Action Rows */}
